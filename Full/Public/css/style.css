@@ -1,0 +1,30 @@
+#main-heading3 {
+    text-shadow: 2px 3px 0 rgb(255, 255, 255); 
+    color:rgb(1, 61, 74);
+    font-size: 3em;
+    text-align: center;
+    
+}
+#login-form {
+    margin: 0 auto;
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#musik2 {
+    text-align: center;
+
+    position: fixed;
+    bottom: 5px;
+    width: 100%;
+}
+
+#logo {
+    display: block;
+    margin: 20px auto;
+    max-width: 35%;
+    height: auto;
+}
