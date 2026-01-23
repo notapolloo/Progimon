@@ -1,0 +1,118 @@
+
+#main-bg  {
+    background-image: url('/imgs/Pet_Shop_2014.webp');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+#main-bg2  {
+    background-image: url('/imgs/Puffle_Park.webp');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+#main-bg3  {
+    background-image: url('/imgs/Puffle_Care_Certificate.webp');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: fill;
+}
+#main-heading {
+    text-shadow: 2px 5px 0 rgb(76, 121, 12); 
+    color:rgb(255, 241, 116);
+    font-size: 3em;
+    text-align: center;
+    background-color: rgb(1, 97, 30)
+}
+#main-heading2 {
+    text-shadow: 2px 5px 0 rgb(72, 12, 121); 
+    color:rgb(156, 206, 255);
+    font-size: 3em;
+    text-align: center;
+    background-color: rgb(25, 1, 97)
+}
+#main-heading3 {
+    text-shadow: 2px 3px 0 rgb(255, 255, 255); 
+    color:rgb(1, 61, 74);
+    font-size: 3em;
+    text-align: center;
+    
+}
+#welcome{
+    text-shadow: 2px 5px 0 rgb(244, 255, 87); 
+    color:rgba(72, 21, 181, 0.953);
+    font-size: 50px;
+    text-align: center;
+}
+#both-puffs {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#puff1-pic {
+    height: 200px; /* Fixed height */
+}
+#puff1:hover {
+animation: bounce 2s infinite;;
+
+}
+
+#puff2-pic {
+    height: 200px; /* Fixed height */
+}
+#puff2:hover  {
+animation: bounce 2s infinite;;
+
+}
+
+#bed{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#makeP{
+        display: flex;
+    align-items: center;
+    height: 20vh;
+    justify-content: space-around;
+    flex-direction: column;
+}
+#redBed{
+    height: 400px;
+}
+@keyframes bounce {
+  0%, 100% {
+    top: 0; /* Starting and ending position (at the top) */
+    animation-timing-function: ease-in; /* Smooth deceleration as it reaches the top */
+  }
+  50% {
+    top: 100px; /* Mid-point of the bounce (at the bottom) */
+    animation-timing-function: ease-out; /* Smooth acceleration as it falls */
+  }
+}
+
+#musik{
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    
+}
+#musik2{
+    
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    
+    
+}
