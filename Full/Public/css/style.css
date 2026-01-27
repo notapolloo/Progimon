@@ -28,3 +28,31 @@
     max-width: 35%;
     height: auto;
 }
+
+#makeP{
+    display: flex;
+    height: 20vh;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+#submitbutton {
+    font-size: 30px;
+    background-color: #206022; 
+    color: white; 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer; 
+}
+
+#submitbutton:hover {
+    background-color: #63f467; 
+}
+
+#labels{
+    font-size: 20px;
+    padding: 10px 20px;
+    border-radius: 4px; 
+    cursor: pointer; 
+}

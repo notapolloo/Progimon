@@ -92,6 +92,8 @@ async function main() {
       res.send({  "msg":"Chicken created successfully", "id": chicken["_id"], "chicken": chicken });
    });
    
+
+   // DON'T COPY THIS STUFFS 
    app.post("/api/monsterz", async function(req, res){
       console.log(req)
       monster = await Monsterz.create(req.body);
@@ -215,36 +217,3 @@ async function main() {
                
                
                
-               /** Trash                            
-               * `<p></p>`
-               */
-               
-               
-               
-               /** 
-               * 
-               
-               http.createServer(function(request, response) {  
-               
-               console.log(request.method);
-               console.log(request.url);
-               ip = request.socket.remoteAddress;
-               if(request.url === '/chicken') {
-               num_visits += 1;
-               response.writeHead(200, {"Content-Type": "text/html"});
-               response.write(`<h1>Bawk${" Bawk".repeat(num_visits)}! <(')3</h1>`);    
-               response.end();
-               } else if(request.url=== '/'){
-               response.writeHead(200, {"Content-Type": "text/html"});
-               response.write(`<h1>Hello, Your address is ${ip.substring(ip.lastIndexOf(':') + 1)}</h1>'`);    
-               response.end();
-               
-               }else {
-                  response.writeHead(400, {"content-type": "text/html"});
-               response.write("<h1>URL no exist bruh</h1>");
-               response.end();
-               }  
-               
-               }).listen(3000);
-               
-               **/
