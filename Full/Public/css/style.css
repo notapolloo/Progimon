@@ -56,3 +56,25 @@
     border-radius: 4px; 
     cursor: pointer; 
 }
+
+#makeMonster{
+    display: flex;
+    height: 20vh;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+#createbutton {
+    font-size: 30px;
+    background-color: #206022; 
+    color: white; 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer; 
+}
+
+#createbutton:hover {
+    background-color: #63f467; 
+}
+
