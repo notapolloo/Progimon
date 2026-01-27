@@ -153,7 +153,7 @@ async function main() {
 
          
 //delete
-         app.delete("/api/progimon/:id", async function(req, res){
+   app.delete("/api/progimon/:id", async function(req, res){
             id = req.params.id;
             progimon = await Progimon.findById(id);
             if(progimon){
@@ -167,7 +167,21 @@ async function main() {
             }else{
                res.status(404).send({"error": 404, "msg":"Error! Bro doesn't wanna sleep just yet!"});
             }});        
-            
+//--
+   app.delete("/api/ACCOUNTSDEV/:id", async function(req, res){
+            id = req.params.id;
+            account = await Accounts.findById(id);
+            if(account){
+               try{
+                  await Accounts.deleteOne({_id: id});
+                  res.send({"message":`Account of id=${id} has been deleted. Hope ya had fun!`, "response_code":200});
+               }catch(err){
+                  console.error
+                  res.status(500).send(err); 
+               }
+            }else{
+               res.status(404).send({"error": 404, "msg":"Error! Brodie doesn't wanna sleep just yet!"});
+            }});  
             
             
             
