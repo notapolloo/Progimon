@@ -94,6 +94,7 @@ async function main() {
    
 
    // DON'T COPY THIS STUFFS 
+   // edit 2026 i wish i had said what i meant by that
    app.post("/api/monsterz", async function(req, res){
       console.log(req)
       monster = await Monsterz.create(req.body);
