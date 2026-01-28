@@ -1,22 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>See Monsters</title>
-    <div id="main-B3">
-        <h1 id="main-heading3">Draw Your Monster Below! (WIP)</h1>
-    </div>
+
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome for drawing icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body id="main-bg3">
-    
-    <div id="makeMonster">
-        <form action="map.html", method="POST">
-            <! Drawing area will be implemented here >
-            <input id="createbutton" type="create" value="Create Monster">       
+    <!-- Header -->
+    <div id="main-B3">
+        <h1 id="main-heading3">Draw Your Monster Below! (WIP)</h1>
+    </div>
+
+    <!-- Monster creation form -->
+    <form id="makeMonster" action="map.html" method="POST">
+
+        <!-- Drawing tools container -->
+        <div class="container">
+            <section class="tools-board">
+                <!-- Tools -->
+                <div class="row">
+                    <label class="title"><strong>Tools</strong></label>
+                    <ul class="options">
+                        <li class="option tool" id="pencil"><i class="fas fa-pencil"></i><span>Pencil</span></li>
+                        <li class="option active tool" id="brush"><i class="fas fa-brush"></i><span>Brush</span></li>
+                        <li class="option tool" id="eraser"><i class="fas fa-eraser"></i><span>Eraser</span></li>
+                        <li class="option">
+                            <input type="range" id="size-slider" min="1" max="30" value="5">
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Colors -->
+                <div class="row colors">
+                    <label class="title">Colors</label>
+                    <ul class="options">
+                        <li class="option"></li>
+                        <li class="option selected"></li>
+                        <li class="option"></li>
+                        <li class="option"></li>
+                        <li class="option">
+                            <input type="color" value="#00FF00" id="color-picker">
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Shapes -->
+                <div class="row">
+                    <label class="title"><strong>Shapes</strong></label>
+                    <ul class="options">
+                        <li class="option tool" id="rectangle"><i class="fa-solid fa-dice-one"></i><span>Rectangle</span></li>
+                        <li class="option tool" id="circle"><i class="fa-regular fa-circle"></i><span>Circle</span></li>
+                        <li class="option tool" id="triangle"><i class="fa-solid fa-mountain"></i><span>Triangle</span></li>
+                        <li class="option tool" id="square"><i class="far fa-square"></i><span>Square</span></li>
+                        <li class="option tool" id="hexagon"><i class="fa-solid fa-cube"></i><span>Hexagon</span></li>
+                        <li class="option tool" id="pentagon"><i class="fa-solid fa-dice-d6"></i><span>Pentagon</span></li>
+                        <li class="option tool" id="line"><i class="fa-solid fa-grip-lines"></i><span>Line</span></li>
+                        <li class="option tool" id="arrow"><i class="fa-solid fa-arrow-up"></i><span>Arrow</span></li>
+                        <li class="option">
+                            <input type="checkbox" id="fill-color">
+                            <label for="fill-color"> Fill Color</label>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Canvas actions -->
+                <div class="row buttons">
+                    <button type="button" class="clear-canvas">Clear Canvas</button>
+                    <button type="button" class="save-img">Save As Image</button>
+                </div>
+            </section>
+
+            <!-- Drawing canvas -->
+            <section class="drawing-board">
+                <canvas id="monsterCanvas" width="800" height="600"></canvas>
+            </section>
         </div>
 
-
-
+        <!-- Submit button -->
+        <input id="createbutton" type="submit" value="Create Monster">
+    </form>
 </body>
+
 </html>
