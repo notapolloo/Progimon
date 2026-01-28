@@ -49,13 +49,12 @@ async function main() {
    
    const AccountSchema = new mongoose.Schema({ 
       User: {type: String, required: true},
+      Email: {type: String, required: true},
       Password: {type: String, required: true},
-      UserID: {type: Number, required: true}
    });
    const progimonSchema = new mongoose.Schema({ 
       name: {type: String, required: true},
       level: {type: Number, required: true},
-      ObjectID: {type: String, required: true}
    });
    const Progimon = mongoose.model("Progimon", progimonSchema);
    const Accounts = mongoose.model("Accounts", AccountSchema);
