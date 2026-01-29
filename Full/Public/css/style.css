@@ -65,6 +65,7 @@
 }
 
 #createbutton {
+    align-self: flex-end;
     font-size: 30px;
     background-color: #206022; 
     color: white; 
@@ -82,11 +83,14 @@
 
 
 
-/* All items below are for draw.html */
+/* All items below are for draw.html 
+-> SOURCE: https://www.geeksforgeeks.org/javascript/build-a-drawing-app-using-javascript/ */
+
 body {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     min-height: 100vh;
     background-color: #e3dede;
     margin: 0;
@@ -96,20 +100,18 @@ body {
 }
 
 .container {
-    display: flex;
-    gap: 10px;
-    height: 540px;
-    max-width: 1050px;
-    width: 100%;
-    border-radius: 20px;
+    display: flex;              
+    flex-direction: row;        
+    align-items: flex-start;    
+    gap: 20px;                  
+    justify-content: center;    
+    margin: 20px 0;     
 }
 
 .tools-board {
     width: 210px;
     height: 590px;
-    border-radius: 20px;
-    background-color: #f8f7f6;
-    padding: 15px 22px 0;
+    flex-shrink: 0;
 }
 
 .tools-board .row {
@@ -247,11 +249,16 @@ body {
 }
 
 .drawing-board {
-    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .drawing-board canvas {
-    width: 100%;
+    width: 800px;         /* or 100% of canvas container */
     height: 590px;
     border-radius: 10px;
+    border: 2px solid #000;
+    background-color: #fff; /* visible canvas */
 }
+

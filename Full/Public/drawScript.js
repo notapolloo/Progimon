@@ -1,4 +1,5 @@
 // Javascript code for drawing page
+// SOURCE: https://www.geeksforgeeks.org/javascript/build-a-drawing-app-using-javascript/
 const canvas = 
     document.querySelector("canvas"),
 toolBtns = 

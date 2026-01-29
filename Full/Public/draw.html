@@ -1,3 +1,5 @@
+<!-- Source: https://www.geeksforgeeks.org/javascript/build-a-drawing-app-using-javascript/-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,25 +8,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>See Monsters</title>
 
-    <!-- Your CSS -->
+    <!-- Link to external CSS -->
     <link rel="stylesheet" href="css/style.css">
-    <!-- Font Awesome for drawing icons -->
+
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
-<body id="main-bg3">
+<body>
     <!-- Header -->
-    <div id="main-B3">
-        <h1 id="main-heading3">Draw Your Monster Below! (WIP)</h1>
-    </div>
+    <h1 id="main-heading3">Draw Your Monster Below! (WIP)</h1>
 
     <!-- Monster creation form -->
     <form id="makeMonster" action="map.html" method="POST">
 
-        <!-- Drawing tools container -->
-        <div class="container">
+        <!-- Drawing tools and canvas container -->
+        <div class="drawing-container">
             <section class="tools-board">
                 <!-- Tools -->
                 <div class="row">
@@ -81,7 +82,7 @@
 
             <!-- Drawing canvas -->
             <section class="drawing-board">
-                <canvas id="monsterCanvas" width="800" height="600"></canvas>
+                <canvas id="monsterCanvas" width="800" height="590"></canvas>
             </section>
         </div>
 
