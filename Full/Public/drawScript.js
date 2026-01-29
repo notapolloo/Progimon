@@ -26,7 +26,7 @@ let prevMouseX, prevMouseY, snapshot,
     selectedColor = "#000";
 
 const setCanvasBackground = () => {
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "transparent";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = selectedColor;
 }
