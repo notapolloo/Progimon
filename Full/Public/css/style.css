@@ -57,22 +57,26 @@
     cursor: pointer; 
 }
 
-#makeMonster{
+#makeMonster {
     display: flex;
-    height: 20vh;
-    justify-content: space-around;
-    flex-direction: row;
+    justify-content: flex-start;   /* stick to left */
+    align-items: center;           /* center group vertically on page */
+    width: 100%;
 }
 
 #createbutton {
-    align-self: flex-end;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
     font-size: 30px;
-    background-color: #206022; 
-    color: white; 
-    padding: 10px 20px; 
-    border: none; 
-    border-radius: 4px; 
-    cursor: pointer; 
+    background-color: #206022;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 1000; /* stays above canvas */
 }
 
 #createbutton:hover {
@@ -87,25 +91,19 @@
 -> SOURCE: https://www.geeksforgeeks.org/javascript/build-a-drawing-app-using-javascript/ */
 
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    margin: 0;
     min-height: 100vh;
     background-color: #e3dede;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.container {
-    display: flex;              
-    flex-direction: row;        
-    align-items: flex-start;    
-    gap: 20px;                  
-    justify-content: center;    
-    margin: 20px 0;     
+.drawing-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;     /* ✅ bottom-align canvas + toolbar */
+    gap: 20px;
+    justify-content: flex-start;
+    margin-left: 0; 
 }
 
 .tools-board {
@@ -250,13 +248,13 @@ body {
 
 .drawing-board {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
 .drawing-board canvas {
-    width: 800px;         /* or 100% of canvas container */
-    height: 590px;
+    width: 1000px;         /* or 100% of canvas container */
+    height: 600px;
     border-radius: 10px;
     border: 2px solid #000;
     background-color: #fff; /* visible canvas */
