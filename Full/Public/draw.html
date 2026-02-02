@@ -24,10 +24,11 @@
     <!-- Monster creation form -->
     <form id="makeMonster" action="map.html" method="POST">
 
-        <!-- Drawing tools and canvas container -->
+        <!-- Drawing tools, canvas, and name panel -->
         <div class="drawing-container">
+
+            <!-- Tools board -->
             <section class="tools-board">
-                <!-- Tools -->
                 <div class="row">
                     <label class="title"><strong>Tools</strong></label>
                     <ul class="options">
@@ -40,7 +41,6 @@
                     </ul>
                 </div>
 
-                <!-- Colors -->
                 <div class="row colors">
                     <label class="title">Colors</label>
                     <ul class="options">
@@ -54,7 +54,6 @@
                     </ul>
                 </div>
 
-                <!-- Shapes -->
                 <div class="row">
                     <label class="title"><strong>Shapes</strong></label>
                     <ul class="options">
@@ -73,7 +72,6 @@
                     </ul>
                 </div>
 
-                <!-- Canvas actions -->
                 <div class="row buttons">
                     <button type="button" class="clear-canvas">Clear Canvas</button>
                     <button type="button" class="save-img">Save As Image</button>
@@ -84,11 +82,27 @@
             <section class="drawing-board">
                 <canvas id="monsterCanvas" width="1000" height="600"></canvas>
             </section>
+
+            <!-- NEW: Monster name panel (right side) -->
+            <section class="monster-name-panel">
+                <label for="monsterName"><strong>Monster Name</strong></label>
+                <input
+                    type="text"
+                    id="monsterName"
+                    name="monsterName"
+                    placeholder="Enter monster name..."
+                    maxlength="30"
+                    required
+                >
+            </section>
+
         </div>
 
         <!-- Submit button -->
         <input id="createbutton" type="submit" value="Create Monster">
     </form>
+
+    <!-- Drawing app JS -->
     <script src="drawScript.js"></script>
 </body>
 

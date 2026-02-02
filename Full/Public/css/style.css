@@ -83,6 +83,34 @@
     background-color: #63f467; 
 }
 
+.monster-name-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;   /* aligns with bottom of canvas */
+    height: 600px;               /* match canvas height */
+    width: 220px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.monster-name-panel label {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.monster-name-panel input {
+    padding: 8px 10px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 2px solid #333;
+    outline: none;
+}
+
+.monster-name-panel input:focus {
+    border-color: #206022;
+}
+
+
 
 
 
