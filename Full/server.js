@@ -60,6 +60,8 @@ async function main() {
    const progimonSchema = new mongoose.Schema({ 
       name: {type: String, required: true},
       level: {type: Number, required: true},
+      img_url: {type: String, required: true},
+      parentUser: {type: String, required: true} // username of owner maybe link to acc page
    });
    const Progimon = mongoose.model("Progimon", progimonSchema);
    const Accounts = mongoose.model("Accounts", AccountSchema);
