@@ -39,7 +39,7 @@ async function main() {
       })
    );
    app.use(cors());
-   app.use(express.static(path.join(__dirname, 'public')));
+   app.use(express.static("Public"));
    
    app.get("/", function(req, res){
       res.sendFile('index.html', { root: path.join(__dirname, 'public') });
