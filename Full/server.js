@@ -4,6 +4,8 @@ const http = require("http");
 num_visits = 0;
 const express = require("express");
 const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
@@ -17,10 +19,11 @@ const MongoStore = require("connect-mongo").default;
 main(); 
 async function main() {
    mongoose.connect('mongodb://localhost/progimon');
+   app.use(express.urlencoded({ extended: true }));
    app.use(express.json());
    // Parse URL-encoded bodies (from HTML forms)
-   app.use(express.urlencoded({ extended: true }));
-   app.use(
+   
+/*     app.use(
       session({
          name: "progimon.sid",
          secret: process.env.SESSION_SECRET || "dev-only-secret-change-me",
@@ -37,9 +40,36 @@ async function main() {
             maxAge: 1000 * 60 * 60 * 24 * 7,
          },
       })
-   );
+   );  */
    app.use(cors());
    app.use(express.static("Public"));
+   
+   app.use(
+      session({
+      secret: "progimon-secret",
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({ mongoUrl: "mongodb://localhost/progimon" }),
+      cookie: {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: false, // set true when HTTPS
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+         },
+      
+   }));
+
+   
+   
+   function requireAuth(req, res, next) {
+      if (!req.session.userId) {
+         return res.status(401).send("Not logged in");
+      }
+      next();
+   }
+
+   // :white_check_mark: LOGIN ROUTE — MUST BE HERE
+
    
    app.get("/", function(req, res){
       res.sendFile('index.html', { root: path.join(__dirname, 'public') });
@@ -51,7 +81,24 @@ async function main() {
       res.sendFile('register.html', { root: path.join(__dirname, 'public') });
       
    });
-   
+   app.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const account = await Accounts.findOne({ User: username });
+    if (!account) return res.json({ success: false });
+        const match = await bcrypt.compare(password, account.PasswordHash);
+    if (!match) return res.json({ success: false });
+
+    // :key: THIS IS CRITICAL
+    req.session.userId = account._id;
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false });
+  }
+});
    const AccountSchema = new mongoose.Schema({ 
       User: {type: String, required: true},
       Email: {type: String, required: true},
@@ -128,6 +175,33 @@ async function main() {
       } catch (err) {
          console.error(err);
          res.status(500).send({ error: "Server error brodie" });
+      }
+   });
+   
+   app.post("/login", async (req, res) => {
+      try {
+         const { username, password } = req.body;
+         
+         if (!username || !password) {
+            return res.json({ success: false });
+         }
+         
+         const account = await Accounts.findOne({ User: username });
+         if (!account) {
+            return res.json({ success: false });
+         }
+         
+         const match = await bcrypt.compare(password, account.PasswordHash);
+         if (!match) {
+            return res.json({ success: false });
+         }
+         
+         // ✅ LOGIN SUCCESS
+         res.json({ success: true });
+         
+      } catch (err) {
+         console.error(err);
+         res.json({ success: false });
       }
    });
    
@@ -266,18 +340,12 @@ async function main() {
                      });
                      
                      //middleware
-                     function requireAuth(req, res, next) {
-                        if (!req.session.userId) {
-                           return res.status(401).send("Not logged in");
-                        }
-                        next();
-                     }
                      
                      
                      
                      
                      
-                     app.listen(3000, function(){
+                     app.listen(3000, function(){ 
                         console.log("its progin' time (port 3000)");
                      });
                   }//last line of main

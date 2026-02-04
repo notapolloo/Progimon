@@ -8,7 +8,7 @@
 
     const response = await fetch("/api/ACCOUNTSDEV", {
       method: "POST",
-      body: new FormData(loginForm)
+
     });
 
     const data = await response.json();
