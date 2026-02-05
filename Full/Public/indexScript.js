@@ -6,9 +6,9 @@
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault(); // stops page from being replaced
 
-    const response = await fetch("/api/ACCOUNTSDEV", {
-      method: "POST",
-
+    const response = await fetch("/login", {
+      method: "POST", 
+      
     });
 
     const data = await response.json();
