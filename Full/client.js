@@ -14,4 +14,4 @@ fetch('/api/players')
 
 
 
-    
+console.log(await Accounts.find({}));

@@ -65,9 +65,10 @@ async function main() {
          
       });
       app.post("/login", async (req, res) => {
-         try {const { username, password } = req.body;
+         try {const { User, password } = req.body;
          
-         const account = await Accounts.findOne({ User: username });
+         const account = await Accounts.findOne({ User: User });
+         
          if (!account) {
             return res.json({ success: false });
          }
