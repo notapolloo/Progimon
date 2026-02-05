@@ -19,86 +19,82 @@ const MongoStore = require("connect-mongo").default;
 main(); 
 async function main() {
    mongoose.connect('mongodb://localhost/progimon');
-   app.use(express.urlencoded({ extended: true }));
    app.use(express.json());
-   // Parse URL-encoded bodies (from HTML forms)
+   app.use(express.urlencoded({ extended: true }));
    
-/*     app.use(
+
+   app.use(cors());
+   app.use(express.static("Public"));
+   
+   app.use(
       session({
+         secret: "progimon-secret", // change this to a strong secret in production .env
          name: "progimon.sid",
-         secret: process.env.SESSION_SECRET || "dev-only-secret-change-me",
          resave: false,
          saveUninitialized: false,
-         store: MongoStore.create({ mongoUrl: "mongodb://localhost/progimon" ,
-            collectionName: "sessions",
-            ttl: 60 * 60 * 24 * 7, // 7 days
-         }),
+         store: MongoStore.create({ mongoUrl: "mongodb://localhost/progimon" }),
          cookie: {
             httpOnly: true,
             sameSite: "lax",
             secure: false, // set true when HTTPS
             maxAge: 1000 * 60 * 60 * 24 * 7,
          },
-      })
-   );  */
-   app.use(cors());
-   app.use(express.static("Public"));
-   
-   app.use(
-      session({
-      secret: "progimon-secret",
-      resave: false,
-      saveUninitialized: false,
-      store: MongoStore.create({ mongoUrl: "mongodb://localhost/progimon" }),
-      cookie: {
-            httpOnly: true,
-            sameSite: "lax",
-            secure: false, // set true when HTTPS
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-         },
+         
+      }));
       
-   }));
-
-   
-   
-   function requireAuth(req, res, next) {
-      if (!req.session.userId) {
-         return res.status(401).send("Not logged in");
+      
+      
+      function requireAuth(req, res, next) {
+         if (!req.session.userId) {
+            return res.status(401).send("Not logged in");
+         }
+         next();
       }
-      next();
-   }
-
-   // :white_check_mark: LOGIN ROUTE — MUST BE HERE
-
-   
-   app.get("/", function(req, res){
-      res.sendFile('index.html', { root: path.join(__dirname, 'public') });
       
+      // :white_check_mark: LOGIN ROUTE — MUST BE HERE
+      
+      
+      app.get("/", function(req, res){
+         res.sendFile('index.html', { root: path.join(__dirname, 'public') });
+         
+      });
+      
+      app.get("/api/register",async function(req, res){
+         
+         res.sendFile('register.html', { root: path.join(__dirname, 'public') });
+         
+      });
+      app.post("/login", async (req, res) => {
+         try {const { username, password } = req.body;
+         
+         const account = await Accounts.findOne({ User: username });
+         if (!account) {
+            return res.json({ success: false });
+         }
+         
+         const match = await bcrypt.compare(password, account.PasswordHash);
+         if (!match) {
+            return res.json({ success: false });
+         }
+         
+         req.session.userId = account._id;
+         res.json({ success: true });
+         
+      } catch (err) {
+         console.error(" Login error:", err);
+         res.status(500).json({ success: false });
+      }
    });
    
-   app.get("/api/register",async function(req, res){
-      
-      res.sendFile('register.html', { root: path.join(__dirname, 'public') });
-      
+   app.post("/logout", (req, res) => {
+      req.session.destroy((err) => {
+         if (err) return res.status(500).json({ error: "Logout failed" });
+         
+         res.clearCookie("progimon.sid");
+         res.json({ message: "Logged out" });
+      });
    });
-   app.post("/login", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-
-    const account = await Accounts.findOne({ User: username });
-    if (!account) return res.json({ success: false });
-        const match = await bcrypt.compare(password, account.PasswordHash);
-    if (!match) return res.json({ success: false });
-
-    // :key: THIS IS CRITICAL
-    req.session.userId = account._id;
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.json({ success: false });
-  }
-});
+   
    const AccountSchema = new mongoose.Schema({ 
       User: {type: String, required: true},
       Email: {type: String, required: true},
@@ -175,33 +171,6 @@ async function main() {
       } catch (err) {
          console.error(err);
          res.status(500).send({ error: "Server error brodie" });
-      }
-   });
-   
-   app.post("/login", async (req, res) => {
-      try {
-         const { username, password } = req.body;
-         
-         if (!username || !password) {
-            return res.json({ success: false });
-         }
-         
-         const account = await Accounts.findOne({ User: username });
-         if (!account) {
-            return res.json({ success: false });
-         }
-         
-         const match = await bcrypt.compare(password, account.PasswordHash);
-         if (!match) {
-            return res.json({ success: false });
-         }
-         
-         // ✅ LOGIN SUCCESS
-         res.json({ success: true });
-         
-      } catch (err) {
-         console.error(err);
-         res.json({ success: false });
       }
    });
    
@@ -295,38 +264,7 @@ async function main() {
                      }else{
                         res.status(404).send({"error": 404, "msg":"Error! Brodie doesn't wanna sleep just yet!"});
                      }});  
-                     //AUTH ROUTES login stuff              
-                     app.post("/api/login", async (req, res) => {
-                        try {
-                           const { User, Password } = req.body;
-                           if (!User || !Password) {
-                              return res.status(400).json({ error: "Missing credentials" });
-                           }
-                           
-                           const account = await Accounts.findOne({ User });
-                           if (!account) return res.status(401).json({ error: "Invalid login" });
-                           
-                           const ok = await bcrypt.compare(Password, account.PasswordHash);
-                           if (!ok) return res.status(401).json({ error: "Invalid login" });
-                           
-                           // ✅ Create session
-                           req.session.userId = account._id.toString();
-                           req.session.username = account.User;
-                           
-                           res.json({ message: "Logged in", user: account.User });
-                        } catch (err) {
-                           console.error(err);
-                           res.status(500).json({ error: "Server error brodie " });
-                        }
-                     });
-                     app.post("/api/logout", (req, res) => {
-                        req.session.destroy((err) => {
-                           if (err) return res.status(500).json({ error: "Logout failed" });
-                           
-                           res.clearCookie("progimon.sid");
-                           res.json({ message: "Logged out" });
-                        });
-                     });
+
                      //who am I test
                      app.get("/api/me", (req, res) => {
                         if (!req.session.userId) {

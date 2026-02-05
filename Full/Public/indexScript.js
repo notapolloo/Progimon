@@ -1,21 +1,21 @@
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault(); // REQUIRED
 
-    console.log("Index script loaded");
-  
-  const loginForm = document.getElementById("login-form");
+  const User = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault(); // stops page from being replaced
-
-    const response = await fetch("/login", {
-      method: "POST", 
-      
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      window.location.href = "/dum.html";
-    } else {
-      alert("Login failed");
-    }
+  const res = await fetch("/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ User, password })
   });
+
+  const data = await res.json();
+    
+  if (data.success) {
+    window.location.href = "/dum.html";
+  } else {
+    alert("Login failed");
+  }
+});
