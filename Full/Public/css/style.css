@@ -115,6 +115,19 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* All items below are for draw.html 
 -> SOURCE: https://www.geeksforgeeks.org/javascript/build-a-drawing-app-using-javascript/ */
 
@@ -287,4 +300,11 @@ body {
     border: 2px solid #000;
     background-color: transparent; /* visible canvas */
 }
+
+
+
+
+
+
+
 
