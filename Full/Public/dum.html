@@ -3,62 +3,65 @@
 <head>
     <link rel="stylesheet" href="css/style.css">
     <title>WIP</title>
-
+    
     <div>
         <h1 id="main-heading3">Welcome to Progimon! HOMEPAGE WIP</h1>
     </div>
 </head>
 
 <body id="main-bg3">
- <div class="top-bar">
-            <div class="left-spacer"></div>
+    <div class="top-bar">
+        <div class="left-spacer"></div>
         
-            <div class="header-icons">
-                <img src="imgs/MUSIK.png" 
-                class="icon"
-                onclick="window.location.href='dum.html';"
-                >
-                <img src="imgs/BOOK.png"
-                 class="icon"
-                 onclick="window.location.href='LookUp.html';"
-                 >
-                <img src="imgs/HOUSETOUR.png" 
-                class="icon"
-                onclick="window.location.href='inventory.html';"
-                >
-                <img src="imgs/MINIGAME.png" 
-                class="icon"
-                onclick="window.location.href='gameHome.html';"
-                >
-            </div>
+        <div class="header-icons">
+            <img src="imgs/MUSIK.png" 
+            class="icon"
+            onclick="playAudio()">
+            <audio loop id="myAudio" src="music/clever boy (apollo pet trader)/clever boy (loopable).ogg"></audio>
+
+            <img src="imgs/BOOK.png"        
+            class="icon"
+            onclick="window.location.href='LookUp.html';"
+            >
+            <img src="imgs/HOUSETOUR.png" 
+            class="icon"
+            onclick="window.location.href='inventory.html';"
+            >
+            <img src="imgs/MINIGAME.png" 
+            class="icon"
+            onclick="window.location.href='gameHome.html';"
+            >
         </div>
-        <div class="steveAndCo">
-             <!--         <div class="curve">
+    </div>
+    <div class="steveAndCo">
+        <!--         <div class="curve">
             <img id="steve" src="imgs/asset.png">
             <img id="steve" src="imgs/steveLook.png">
         </div> -->
         
-
-        <img class="steve" src="imgs/steveLook.png">
-        <img class="asset" src="imgs/asset.png">
-            
-    </div>    
-        </div>
-    
-        <div class="refresh-container">
-            <img
-                src="imgs/REFRESHME.png"
-                alt=""
-                class="refresh-button"
-                onclick="location.reload()"
-            >
-        </div>
         
-    <div class="steveAndCo">
-       
-       
+        <img class="asset" src="imgs/sketchAsset.png">
+        <img class="asset" id="stick" src="imgs/sketchAsset2.png">
+        
+    </div>    
+</div>
+
+<div class="refresh-container">
+    <img
+    src="imgs/REFRESHME.png"
+    alt=""
+    class="refresh-button"
+    onclick="location.reload()"
+    >
+</div>
+
+<div class="steveAndCo">
+    
+    
     
 </div>
 </div>  
+
+<script src="js/home.js"></script>
 </body>
 </html>
