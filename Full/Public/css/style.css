@@ -116,10 +116,11 @@
 
 .curve {
     position: relative;
-    top: 20px;              /* replaces margin-top */
+    top: 0px;              /* replaces margin-top */
     width: 100%;
     height: 160px;
-    border-top-left-radius: 80px;
+    border-top-left-radius: 120px;
+    left: 20px;
     border-top: 6px solid black;
     z-index: 2; 
     padding-left: 80px;
@@ -138,7 +139,7 @@
     transform: rotate(-22deg);
     transform-origin: bottom left;
 
-    width: 140px;
+    width: 200px;
     z-index: 3;
 } 
 */
@@ -149,11 +150,13 @@
         justify-content: right;
         width: 100%;
         height: 260px;
+        margin-top: -100px;
         overflow: visible;
     }
     
 }
 
+<<<<<<< Updated upstream
 .steve{
     position: absolute;
     width: 35%;
@@ -173,31 +176,54 @@
 
 
 
+=======
+.header-icons {
+    display: flex;              /* FLEXBOX ON */
+    justify-content: flex-end;  /* push icons to the right */
+    align-items: center;        /* vertically align them */
+    gap: 20px;                  /* space between icons */
+    padding: 20px;
+    position: relative;
+    top: -130px;
+>>>>>>> Stashed changes
 }
 
-
-.inventory-button {
-
-
-    
+.top-bar {
+    display: flex;
+    align-items: baseline; /* ← THIS is the key */
+    padding: 20px 30px;
 }
 
-.index-button {
-
-
-
+/* Left and right MUST match */
+.left-spacer,
+.header-icons {
+    flex: 1;
+    display: flex;
 }
 
-.game-button {
+/* Icons stay on the right */
+.header-icons {
+    justify-content: flex-end;
+    gap: 20px;
+}
 
-
+.icon {
+    width: 60px;
+    height: auto;
+    cursor: pointer;
 }
 
 .refresh-container {
     position: sticky;
     justify-content: center;
+<<<<<<< Updated upstream
     
     z-index: 2;
+=======
+    margin-top: -150px;
+    position: relative;
+    z-index: 10;
+>>>>>>> Stashed changes
 }
 
 .refresh-button {
