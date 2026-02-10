@@ -156,7 +156,6 @@
     
 }
 
-<<<<<<< Updated upstream
 .steve{
     position: absolute;
     width: 35%;
@@ -169,23 +168,6 @@
     max-height: 100%;
     display: flex;
     margin: auto;
-}
-
-
-.music-button {
-
-
-
-=======
-.header-icons {
-    display: flex;              /* FLEXBOX ON */
-    justify-content: flex-end;  /* push icons to the right */
-    align-items: center;        /* vertically align them */
-    gap: 20px;                  /* space between icons */
-    padding: 20px;
-    position: relative;
-    top: -130px;
->>>>>>> Stashed changes
 }
 
 .top-bar {
@@ -216,14 +198,8 @@
 .refresh-container {
     position: sticky;
     justify-content: center;
-<<<<<<< Updated upstream
     
     z-index: 2;
-=======
-    margin-top: -150px;
-    position: relative;
-    z-index: 10;
->>>>>>> Stashed changes
 }
 
 .refresh-button {
