@@ -115,22 +115,43 @@
 /*HOME PAGE STUFF BELOW */
 
 .curve {
-    position: absolute;
-    margin-top: 100px;
+    position: relative;
+    top: 20px;              /* replaces margin-top */
     width: 100%;
-    aspect-ratio: 1;
+    height: 160px;
     border-top-left-radius: 80px;
-    border: 3px solid black;
-    z-index: 1;
+    border-top: 6px solid black;
+    z-index: 2; 
+    padding-left: 80px;
+    box-sizing: border-box;
+    overflow: visible
 }       
 
 #steve{
-    
+    position: absolute;
+
+    /* SAME vertical reference as the curve */
+    top: -50px;
+    /* Horizontal spacing from the curve corner */
+    left: 40px;
+
+    transform: rotate(-22deg);
+    transform-origin: bottom left;
+
+    width: 140px;
+    z-index: 3;
 }
 
 .steveAndCo{
+    .steveAndCo {
+        position: relative;
+        width: 100%;
+        height: 260px;
+        overflow: visible;
+    }
     
 }
+
 
 .music-button {
 
@@ -156,11 +177,20 @@
 
 }
 
-.refresh-button {
-
-
-    
+.refresh-container {
+    display: flex;
+    justify-content: center;
+    margin-top: -100px;
+    position: relative;
+    z-index: 10;
 }
+
+.refresh-button {
+    width: 60px;
+    height: auto;
+    cursor: pointer;
+}
+
 
 
 
