@@ -1,4 +1,5 @@
 // server.js
+
 const http = require("http");
 
 num_visits = 0;

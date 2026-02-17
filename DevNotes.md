@@ -4,3 +4,6 @@
   EXPRESS MIDDLEWARE
   SAVE SESSION 
   
+
+  npx vite --port 3000
+  nodemon server.js   
