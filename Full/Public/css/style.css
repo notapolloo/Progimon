@@ -13,6 +13,15 @@
     border-radius: 5px;
     background-color: #f9f9f9;
 }
+#main-bg3{
+    background-image: url('../imgs/sketchAsset3.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow: hidden;
+
+}
 
 #musik2 {
     text-align: center;
@@ -194,12 +203,12 @@ z-index: 3;
 
 .refresh-container {
     position: sticky;
+    display: flex;
     justify-content: center;
-    
-    z-index: 2;
 }
 
 .refresh-button {
+    margin-top: 20px;
     width: 60px;
     height: auto;
     cursor: pointer;

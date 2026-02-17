@@ -21,8 +21,7 @@
     <!-- Header -->
     <h1 id="main-heading3">Draw Your Monster Below! (WIP)</h1>
 
-    <!-- Monster creation form -->
-    <form id="makeMonster" action="dum.html" method="POST">
+
 
         <!-- Drawing tools, canvas, and name panel -->
         <div class="drawing-container">
@@ -97,12 +96,26 @@
             </section>
 
         </div>
-
+        
         <!-- Submit button -->
-        <input id="createbutton" type="submit" value="Create Monster">
-    </form>
+         
+        <form id="monsterForm" action="/api/progimon" method="POST">
+            <!-- storing canvas data-->
+            <input type="hidden" name="name" id="name">
+            <input type="hidden" name="level" id="level" value="0">
+            <input type="hidden" name="img_url" id="img_url">
+            <input type="hidden" name="parentUser" id="parentUser" value="testUser">
 
-    <!-- Drawing app JS -->
+            <input id="createbutton" type="submit" value="Create Monster">
+
+    <!--name: {type: String, required: true},
+      level: {type: Number, required: true},
+      img_url: {type: String, required: true},
+      parentUser: {type: String, required: true}
+        </form>
+    Drawing app JS -->
+    
+     
     <script src="js/drawScript.js"></script>
 </body>
 

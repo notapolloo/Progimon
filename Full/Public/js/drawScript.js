@@ -256,6 +256,42 @@ saveImage.addEventListener("click", () => {
     link.click();
 })
 
+// Handle form submission - capture canvas image and form data
+const monsterForm = document.getElementById("monsterForm");
+const monsterNameInput = document.getElementById("monsterName");
+const imgUrlInput = document.getElementById("img_url");
+const nameInput = document.getElementById("name");
+
+if (monsterForm) {
+    monsterForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        // Get the monster name from the input field
+        const monsterName = monsterNameInput.value.trim();
+        
+        if (!monsterName) {
+            alert("Please enter a monster name!");
+            return;
+        }
+        
+        // Convert canvas to data URL (base64 image)
+        const canvasDataUrl = canvas.toDataURL("image/png");
+        
+        // Set hidden input values
+        nameInput.value = monsterName;
+        imgUrlInput.value = canvasDataUrl;
+        
+        // Submit the form with all data
+        monsterForm.submit();
+    
+  if (data.success) {
+    window.location.href = "ProgiRoom.html";
+  } else {
+    alert("Login failed");
+  }
+    });
+}
+
 canvas.addEventListener("mousedown", startDraw);
 canvas.addEventListener("mousemove", drawing);
 canvas.addEventListener("mouseup", () => isDrawing = false);
