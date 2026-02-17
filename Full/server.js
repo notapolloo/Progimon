@@ -136,6 +136,7 @@ async function main() {
    app.post("/api/progimon", requireAuth, async (req, res) => {
       console.log(req)
       const progi = await Progimon.create(req.body);
+      return res.redirect("/dum.html");
       //res.send(progi + " said, 'it's progin' time' and progied all over the place.");
    });
    //--
