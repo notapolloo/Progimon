@@ -7,3 +7,7 @@
 
   npx vite --port 3000
   nodemon server.js   
+
+
+
+size art automatically so that images dont overlap

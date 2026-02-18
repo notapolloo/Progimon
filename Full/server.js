@@ -17,7 +17,7 @@ const MongoStore = require("connect-mongo").default;
 
 
 
-main(); 
+main();
 async function main() {
    mongoose.connect('mongodb://localhost/progimon');
    app.use(express.json());
@@ -46,8 +46,8 @@ async function main() {
       
       
       function requireAuth(req, res, next) {
-         if (!req.session.userId) {
-            return res.status(401).send("Not logged in");
+         if (req.session.userId === undefined) {
+            return res.redirect('/index.html');
          }
          next();
       }
@@ -65,6 +65,43 @@ async function main() {
          res.sendFile('register.html', { root: path.join(__dirname, 'public') });
          
       });
+
+      // Protected routes - require authentication
+      app.get("/gameHome.html", requireAuth, (req, res) => {
+         res.sendFile('gameHome.html', { root: path.join(__dirname, 'public') });
+      });
+      
+      app.get("/ProgiRoom.html", requireAuth, (req, res) => {
+         res.sendFile('ProgiRoom.html', { root: path.join(__dirname, 'public') });
+      });
+      
+      app.get("/ProgiFood.html", requireAuth, (req, res) => {
+         res.sendFile('ProgiFood.html', { root: path.join(__dirname, 'public') });
+      });
+      
+      app.get("/Inventory.html", requireAuth, (req, res) => {
+         res.sendFile('Inventory.html', { root: path.join(__dirname, 'public') });
+      });
+      
+      app.get("/LookUp.html", requireAuth, (req, res) => {
+         res.sendFile('LookUp.html', { root: path.join(__dirname, 'public') });
+      });
+      
+      app.get("/draw.html", requireAuth, (req, res) => {
+         res.sendFile('draw.html', { root: path.join(__dirname, 'public') });
+      });
+      
+      app.get("/dum.html", requireAuth, (req, res) => {
+         res.sendFile('dum.html', { root: path.join(__dirname, 'public') });
+      });
+      
+      app.get("/ReactTest.html", requireAuth, (req, res) => {
+         res.sendFile('ReactTest.html', { root: path.join(__dirname, 'public') });
+      });
+
+
+
+      //login route and logout route
       app.post("/login", async (req, res) => {
          try {const { User, password } = req.body;
          
@@ -96,7 +133,12 @@ async function main() {
          res.json({ message: "Logged out" });
       });
    });
-   
+
+
+
+
+
+   // Define Mongoose schemas and models
    const AccountSchema = new mongoose.Schema({ 
       User: {type: String, required: true},
       Email: {type: String, required: true},
@@ -134,12 +176,23 @@ async function main() {
    }); 
    
    //POST
-   app.post("/api/progimon", requireAuth, async (req, res) => {
+/*    app.post("/api/progimon", requireAuth, async (req, res) => {
       console.log(req)
       const progi = await Progimon.create(req.body);
       return res.redirect("/dum.html");
       //res.send(progi + " said, 'it's progin' time' and progied all over the place.");
-   });
+   }); */
+   app.post("/api/progimon", requireAuth, async (req, res) => {
+
+    const progi = await Progimon.create({
+        name: req.body.name,
+        level: req.body.level,
+        img_url: req.body.img_url,
+        parentUser: req.session.userId   // 🔥 attach session user
+    });
+
+    return res.redirect("/dum.html");
+});
    //--
    app.post("/api/ACCOUNTSDEV", async (req, res) => {
       try {
@@ -271,7 +324,7 @@ async function main() {
                      //who am I test
                      app.get("/api/me", (req, res) => {
                         if (!req.session.userId) {
-                           return res.status(401).json({ loggedIn: false });
+                           return res.status(401).json({ loggedIn: false, message: "Not logged in req.session.userId is " + req.session.userId });
                         }
                         res.json({
                            loggedIn: true,
