@@ -46,15 +46,19 @@ async function main() {
 
 
       app.use((req, res, next) => {
+         const publicPages = ["/index.html", "/register.html"];
+      
          if (
             req.path.endsWith(".html") &&
-            req.path !== "/index.html" &&
+            !publicPages.includes(req.path) &&
             !req.session?.userId
          ) {
             return res.redirect("/index.html");
          }
+      
          next();
       });
+      
 
       app.use(express.static("public"));
 
