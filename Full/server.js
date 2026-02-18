@@ -45,7 +45,7 @@ async function main() {
       }));
 
 
-      app.use((req, res, next) => {
+     app.use((req, res, next) => {
          const publicPages = ["/index.html", "/register.html"];
       
          if (
@@ -244,8 +244,11 @@ async function main() {
          // Optional: auto-login right after register
          req.session.userId = newAccount._id.toString();
          req.session.username = newAccount.User;
+
+         return res.redirect("/draw");
+
          
-         res.status(201).send({ message: "Welcome to the world of Progis man!", user: newAccount.User });
+         //res.status(201).send({ message: "Welcome to the world of Progis man!", user: newAccount.User });
       } catch (err) {
          console.error(err);
          res.status(500).send({ error: "Server error brodie" });
