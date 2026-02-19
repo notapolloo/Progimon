@@ -25,7 +25,8 @@ async function main() {
    
 
    app.use(cors());
-   app.use(express.static("Public"));
+   //app.use(express.static("Public"));
+
    
    app.use(
       session({
@@ -42,9 +43,27 @@ async function main() {
          },
          
       }));
+
+
+     app.use((req, res, next) => {
+         const publicPages = ["/index.html", "/register.html"];
       
+         if (
+            req.path.endsWith(".html") &&
+            !publicPages.includes(req.path) &&
+            !req.session?.userId
+         ) {
+            return res.redirect("/index.html");
+         }
       
+         next();
+      });
       
+
+      app.use(express.static("public"));
+
+      
+
       function requireAuth(req, res, next) {
          if (req.session.userId === undefined) {
             return res.redirect('/index.html');
@@ -67,37 +86,40 @@ async function main() {
       });
 
       // Protected routes - require authentication
-      app.get("/gameHome.html", requireAuth, (req, res) => {
-         res.sendFile('gameHome.html', { root: path.join(__dirname, 'public') });
-      });
       
-      app.get("/ProgiRoom.html", requireAuth, (req, res) => {
-         res.sendFile('ProgiRoom.html', { root: path.join(__dirname, 'public') });
-      });
-      
-      app.get("/ProgiFood.html", requireAuth, (req, res) => {
-         res.sendFile('ProgiFood.html', { root: path.join(__dirname, 'public') });
-      });
-      
-      app.get("/Inventory.html", requireAuth, (req, res) => {
-         res.sendFile('Inventory.html', { root: path.join(__dirname, 'public') });
-      });
-      
-      app.get("/LookUp.html", requireAuth, (req, res) => {
-         res.sendFile('LookUp.html', { root: path.join(__dirname, 'public') });
-      });
-      
-      app.get("/draw.html", requireAuth, (req, res) => {
-         res.sendFile('draw.html', { root: path.join(__dirname, 'public') });
-      });
-      
-      app.get("/dum.html", requireAuth, (req, res) => {
-         res.sendFile('dum.html', { root: path.join(__dirname, 'public') });
-      });
-      
-      app.get("/ReactTest.html", requireAuth, (req, res) => {
-         res.sendFile('ReactTest.html', { root: path.join(__dirname, 'public') });
-      });
+
+   app.get("/gameHome", requireAuth, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "gameHome.html"));
+   });
+
+   app.get("/progiRoom", requireAuth, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "ProgiRoom.html"));
+   });
+
+   app.get("/progiFood", requireAuth, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "ProgiFood.html"));
+   });
+
+   app.get("/inventory", requireAuth, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "Inventory.html"));
+   });
+
+   app.get("/lookup", requireAuth, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "LookUp.html"));
+   });
+
+   app.get("/draw", requireAuth, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "draw.html"));
+   });
+
+   app.get("/dum", requireAuth, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "dum.html"));
+   });
+
+   app.get("/reactTest", requireAuth, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "ReactTest.html"));
+   });
+
 
 
 
@@ -222,8 +244,11 @@ async function main() {
          // Optional: auto-login right after register
          req.session.userId = newAccount._id.toString();
          req.session.username = newAccount.User;
+
+         return res.redirect("/draw");
+
          
-         res.status(201).send({ message: "Welcome to the world of Progis man!", user: newAccount.User });
+         //res.status(201).send({ message: "Welcome to the world of Progis man!", user: newAccount.User });
       } catch (err) {
          console.error(err);
          res.status(500).send({ error: "Server error brodie" });
