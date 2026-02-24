@@ -60,6 +60,17 @@ async function main() {
       });
       
 
+      //check if only one account is logged in at a time
+      app.use((req, res, next) => {
+         //if someone is logged in
+         if (req.session.userId) {
+            //check if there's another session with a different userId
+            // This middleware is incomplete - you can implement session checking here
+         }
+         next();
+      });
+
+
       app.use(express.static("public"));
 
       
@@ -139,6 +150,8 @@ async function main() {
          }
          
          req.session.userId = account._id;
+         req.session.username = account.User;
+         
          res.json({ success: true });
          
       } catch (err) {
@@ -346,7 +359,7 @@ async function main() {
                         res.status(404).send({"error": 404, "msg":"Error! Brodie doesn't wanna sleep just yet!"});
                      }});  
 
-                     //who am I test
+                     //who am I test 
                      app.get("/api/me", (req, res) => {
                         if (!req.session.userId) {
                            return res.status(401).json({ loggedIn: false, message: "Not logged in req.session.userId is " + req.session.userId });
@@ -355,7 +368,54 @@ async function main() {
                            loggedIn: true,
                            userId: req.session.userId,
                            username: req.session.username,
+                           "message": `Welcome back, ${req.session.username}! Your user ID is ${req.session.userId}.`
                         });
+                     });
+
+                     // Check active sessions
+                     app.get("/api/sessions", async (req, res) => {
+                        try {
+                           const sessions = await mongoose.connection.db.collection('sessions').find({}).toArray();
+                           const activeSessions = sessions.map(session => {
+                              const sessionData = JSON.parse(session.session);
+                              return {
+                                 username: sessionData.username,
+                                 _id: session._id,
+                                 userId: sessionData.userId,
+                                 expires: session.expires
+                              };
+                           });
+                           res.json({
+                              totalSessions: activeSessions.length,
+                              sessions: activeSessions
+                           });
+                        } catch (err) {
+                           console.error('Failed to get sessions', err);
+                           res.status(500).json({ error: 'Server error' });
+                        }
+                     });
+
+                     // Check sessions for current user
+                     app.get("/api/my-sessions", requireAuth, async (req, res) => {
+                        try {
+                           const sessions = await mongoose.connection.db.collection('sessions').find({}).toArray();
+                           const userSessions = sessions.filter(session => {
+                              const sessionData = JSON.parse(session.session);
+                              return sessionData.userId === req.session.userId;
+                           }).map(session => ({
+                              _id: session._id,
+                              expires: session.expires
+                           }));
+                           res.json({
+                              userId: req.session.userId,
+                              sessionUsername: req.session.username || 'No one',
+                              sessionCount: userSessions.length,
+                              sessions: userSessions
+                           });
+                        } catch (err) {
+                           console.error('Failed to get user sessions', err);
+                           res.status(500).json({ error: 'Server error' });
+                        }
                      });
                      
                      //middleware
