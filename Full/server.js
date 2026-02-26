@@ -192,11 +192,7 @@ async function main() {
       name: {type: String, required: true},
       level: {type: Number, required: true},
       img_url: {type: String, required: true},
-      parentUser: {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Accounts",
-         required: true
-       } // username of owner maybe link to acc page
+      parentUser: { type: String, required: true }// username of owner maybe link to acc page
    });
    const Progimon = mongoose.model("Progimon", progimonSchema);
    const Accounts = mongoose.model("Accounts", AccountSchema);
@@ -236,7 +232,7 @@ async function main() {
         name: req.body.name,
         level: req.body.level,
         img_url: req.body.img_url,
-        parentUser: req.session.userId   
+        parentUser: req.session.Username    
     });
 
     return res.redirect("/dum.html");
