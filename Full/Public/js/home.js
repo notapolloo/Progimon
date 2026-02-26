@@ -1,11 +1,6 @@
-fetch("http://localhost:3000/api/progimon").then(
-        (response) => {return response.json()}).then(
-        (response) =>{req = response}).then(
-        () => {console.log(req);});
-
+console.log("HOME JS IS RUNNING");
 
 function playAudio() {
-  //if the audio is already playing, mute it
   var audio = document.getElementById("myAudio");
   if (!audio.paused) {
     audio.pause();
@@ -13,7 +8,6 @@ function playAudio() {
     return;
   } else audio.play();
 }
-
 
 async function logout(){
   const response = await fetch('/logout', {
@@ -28,90 +22,118 @@ async function logout(){
   } else {
     console.error('Logout failed');
   }
-  
 }
 
+function openModal(progimon) {
+  document.getElementById("modal-name").innerText = progimon.name;
+  document.getElementById("modal-image").src = progimon.img_url;
+  document.getElementById("modal-level").innerText = progimon.level; // fixed
+  document.getElementById("modal-creator").innerText = progimon.parentUser; // fixed
 
+  document.getElementById("claim-button").onclick = () => claimProgimon(progimon._id);
 
+  document.getElementById("progimon-modal").style.display = "flex";
+}
 
+function closeModal() {
+  document.getElementById("progimon-modal").style.display = "none";
+}
+
+async function claimProgimon(id) {
+  const res = await fetch("/api/claim", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ progimonId: id })
+  });
+
+  const data = await res.json();
+  alert(data.message);
+
+  closeModal();
+}
 
 (function(){
-            const ether = document.getElementById('progiSpace');
-            function escapeHtml(s){
-                return String(s)
-                .replace(/&/g,'&amp;')
-                .replace(/</g,'&lt;')
-                .replace(/>/g,'&gt;')
-                .replace(/"/g,'&quot;')
-                .replace(/'/g,'&#39;');
-            }
-            
-            fetch('/api/progimon')
-            .then(res => {
-                if (!res.ok) throw new Error('Network response was not ok');
-                return res.json();
-            })
+  const ether = document.getElementById('progiSpace');
 
+  function escapeHtml(s){
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
 
-            //grab the progis but only 5 random ones
+  fetch('/api/progimon')
+    .then(res => {
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    })
+    .then(data => {
 
-            .then(data => {
-                // data expected to be an array
-                ether.innerHTML = '';
-                if (!Array.isArray(data) || data.length === 0) {
-                    ether.innerHTML = '<p style="color:#fff;text-align:center;">No progimon yet... Weird...</p>';
-                    return;
-                }
-                //take a random sample of 5 progimon
-                data = data.sort(() => 0.5 - Math.random()).slice(0, 5);
-                const list = document.createElement('ul');
-                list.style.listStyle = 'none';
-                list.style.display = 'flex';
-                list.style.flexWrap = 'wrap';
-                list.style.gap = '1rem';
-                list.style.padding = '0';
-                list.style.justifyContent = 'center';
-                
-                data.forEach(m => {
-                    const li = document.createElement('li');
-                    li.style.width = '200px';
-                    li.style.textAlign = 'center';
-                    li.style.color = '#fff';
-                    
-                    // Derive candidate image name from type
-        
-                    const imgSrc = `${m.img_url}`;
-                    const fallback = '/imgs/cat.png'; //if imgSrc doesnt show
-                    
-                    const img = document.createElement('img');``
-                    img.src = imgSrc;
-                    img.alt = escapeHtml(m.name || 'monster');
-                    img.style.width = 'auto';
-                    img.style.height = '200px';
-                    
-                    // If candidate missing, fall back to packaged image
-                    img.onerror = function(){ this.onerror = null; this.src = fallback; };
-                    
-                    const title = document.createElement('div');
-                    title.innerHTML = `<strong>${escapeHtml(m.name || 'Unnamed')}</strong>`;
-                    const meta = document.createElement('div');
-                    meta.style.fontSize = '1em';
-                    meta.style.opacity = '1';
-                    
-                    meta.innerText = `${m.type || ''} — ${m.country || ''}`;
-                    
-                    li.appendChild(img);
-                    li.appendChild(title);
-                    li.appendChild(meta);
-                    list.appendChild(li);
-                });
-                
-                ether.appendChild(list);
-            })
-            .catch(err => {
-                ether.innerHTML = `<p style="color: red;">Error: ${escapeHtml(err.message)}</p>`;
-                console.error('There was a problem with the fetch operation:', err);
-            });
-        })();
+      ether.innerHTML = '';
 
+      if (!Array.isArray(data) || data.length === 0) {
+        ether.innerHTML = '<p style="color:#fff;text-align:center;">No progimon yet... Weird...</p>';
+        return;
+      }
 
+      // Take random 5
+      data = data.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+      const list = document.createElement('ul');
+      list.style.listStyle = 'none';
+      list.style.display = 'flex';
+      list.style.flexWrap = 'wrap';
+      list.style.gap = '1rem';
+      list.style.padding = '0';
+      list.style.justifyContent = 'center';
+
+      data.forEach(m => {
+
+        const li = document.createElement('li');
+        li.style.width = '200px';
+        li.style.textAlign = 'center';
+        li.style.color = '#fff';
+        li.style.cursor = "pointer";   // 👈 ADDED
+
+        const imgSrc = `${m.img_url}`;
+        const fallback = '/imgs/cat.png';
+
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.alt = escapeHtml(m.name || 'monster');
+        img.style.width = 'auto';
+        img.style.height = '200px';
+
+        img.onerror = function(){
+          this.onerror = null;
+          this.src = fallback;
+        };
+
+        const title = document.createElement('div');
+        title.innerHTML = `<strong>${escapeHtml(m.name || 'Unnamed')}</strong>`;
+
+        const meta = document.createElement('div');
+        meta.style.fontSize = '1em';
+        meta.style.opacity = '1';
+        meta.innerText = `Level ${m.level}`;
+
+        li.appendChild(img);
+        li.appendChild(title);
+        li.appendChild(meta);
+
+        // 👇 THIS is what makes clicking work
+        li.onclick = () => openModal(m);
+
+        list.appendChild(li);
+      });
+
+      ether.appendChild(list);
+    })
+    .catch(err => {
+      ether.innerHTML = `<p style="color: red;">Error: ${escapeHtml(err.message)}</p>`;
+      console.error('There was a problem with the fetch operation:', err);
+    });
+
+})();

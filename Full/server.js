@@ -183,12 +183,20 @@ async function main() {
       User: {type: String, required: true},
       Email: {type: String, required: true},
       PasswordHash: { type: String, required: true },
+      inventory: [{
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "Progimon"
+       }]
    });
    const progimonSchema = new mongoose.Schema({ 
       name: {type: String, required: true},
       level: {type: Number, required: true},
       img_url: {type: String, required: true},
-      parentUser: {type: String, required: true} // username of owner maybe link to acc page
+      parentUser: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "Accounts",
+         required: true
+       } // username of owner maybe link to acc page
    });
    const Progimon = mongoose.model("Progimon", progimonSchema);
    const Accounts = mongoose.model("Accounts", AccountSchema);
@@ -228,7 +236,7 @@ async function main() {
         name: req.body.name,
         level: req.body.level,
         img_url: req.body.img_url,
-        parentUser: req.session.userId   // 🔥 attach session user
+        parentUser: req.session.userId   
     });
 
     return res.redirect("/dum.html");
@@ -272,6 +280,28 @@ async function main() {
          res.status(500).send({ error: "Server error brodie" });
       }
    });
+
+   app.post("/api/claim", requireAuth, async (req, res) => {
+      try {
+        const { progimonId } = req.body;
+    
+        const user = await Accounts.findById(req.session.userId);
+    
+        if (user.inventory.includes(progimonId)) {
+          return res.json({ message: "Already claimed!" });
+        }
+    
+        user.inventory.push(progimonId);
+        await user.save();
+    
+        res.json({ message: "Claim successful!" });
+    
+      } catch (err) {
+        res.status(500).json({ error: "Claim failed" });
+      }
+    });
+
+
    
    //PUT
    //showcase?
@@ -422,6 +452,12 @@ async function main() {
                            res.status(500).json({ error: 'Server error' });
                         }
                      });
+                     app.get("/api/my-inventory", requireAuth, async (req, res) => {
+                        const user = await Accounts.findById(req.session.userId)
+                          .populate("inventory");
+                      
+                        res.json(user.inventory);
+                      });
                      
                      //middleware
                      

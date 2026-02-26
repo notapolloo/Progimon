@@ -215,6 +215,96 @@ z-index: 3;
 }
 
 
+
+/* CLAIMING PROGIS ON HOMEPAGE*/
+
+.home-card {
+    display: inline-block;
+    margin: 15px;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+  }
+  
+  .home-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .home-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+  }
+  
+  .close {
+    cursor: pointer;
+    float: right;
+    font-size: 20px;
+  }
+
+
+
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*INVENTORY AND LOOKUP CSS*/
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 200px);
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.inventory-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.inventory-img:hover {
+    transform: scale(1.05);
+}
+
+.lookup-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.lookup-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 
