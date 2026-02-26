@@ -11,3 +11,8 @@
 
 
 size art automatically so that images dont overlap
+
+
+Clickable progis with a limited amount of refreshes per day
+--> Progis on account page
+make account page 

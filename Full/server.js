@@ -131,6 +131,11 @@ async function main() {
       res.sendFile(path.join(__dirname, "public", "ReactTest.html"));
    });
 
+   
+   app.get("/accpage", requireAuth, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "accpage.html"));
+   });
+
 
 
 
