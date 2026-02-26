@@ -6,3 +6,5 @@ fetch("http://localhost:3000/api/me").then(
             document.querySelector("p strong").textContent = response.User;
             document.querySelector("p:nth-child(2) strong").textContent = response.Email;
         });
+
+
