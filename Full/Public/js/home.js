@@ -123,7 +123,6 @@ async function claimProgimon(id) {
         li.appendChild(title);
         li.appendChild(meta);
 
-        // 👇 THIS is what makes clicking work
         li.onclick = () => openModal(m);
 
         list.appendChild(li);

@@ -491,9 +491,39 @@ body {
     height: 45vh;
 }
 
+.cookie-button {
+    width: 200px;
+    height: 200px;
+    display: inline-block;
+    background-image: url('../imgs/cat.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 30px;
+    background-color: transparent;
+    color: rgb(197, 255, 174);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+}
+.cookie-button:hover {
+    background-image: url('../imgs/cat-2.png');
+}
 
-
-
+.border {
+    
+    width: 20px;
+    height: 200px;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+.cookes-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 
 
