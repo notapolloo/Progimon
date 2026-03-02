@@ -1,22 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="stylesheet" href="css/style.css">
     <title>MiniGames</title>
-    <div id="main-B3">
-        <h1 id="main-heading3"> Pick a mini-game! (WIP)</h1>
-    </div>
 </head>
 
+<body id="main-bg3" class ="game-home-bg">
 
+    <div class="game-container">
 
+        <h1 id="main-heading3">Pick a mini-game!</h1>
 
-<body id="main-bg3">
-<img src="imgs/MINIGAME.png" 
-            class="icon"
-            onclick="window.location.href='/gamesHTML/Game1.html';"
-            >
+        <div class="game-grid">
 
+            <div class="game-item" onclick="window.location.href='/gamesHTML/Game1.html';">
+                <img src="imgs/COOKIE.png" class="game-icon">
+                <p class="game-label">Cookie Clicker</p>
+            </div>
+
+            <div class="game-item" onclick="window.location.href='/gamesHTML/Game2.html';">
+                <img src="imgs/basket.png" class="game-icon">
+                <p class="game-label">Fruit Basket</p>
+            </div>
+
+            <div class="game-item" onclick="window.location.href='/gamesHTML/Game3.html';">
+                <img src="imgs/card.png" class="game-icon">
+                <p class="game-label">Memory Cards</p>
+            </div>
+
+            <div class="game-item" onclick="window.location.href='/gamesHTML/Game4.html';">
+                <img src="imgs/bush.png" class="game-icon">
+                <p class="game-label">Wack-a-Steve!</p>
+            </div>
+
+        </div>
+
+    </div>
 
 </body>
 </html>

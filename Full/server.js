@@ -232,7 +232,7 @@ async function main() {
         name: req.body.name,
         level: req.body.level,
         img_url: req.body.img_url,
-        parentUser: req.session.Username    
+        parentUser: req.session.userId   
     });
 
     return res.redirect("/dum.html");
