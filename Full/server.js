@@ -23,9 +23,9 @@ async function main() {
    app.use(express.json());
    app.use(express.urlencoded({ extended: true }));
    
+   const clientDistPath = path.join(__dirname, "dist");
 
    app.use(cors());
-   //app.use(express.static("Public"));
 
    
    app.use(
@@ -45,21 +45,6 @@ async function main() {
       }));
 
 
-     app.use((req, res, next) => {
-         const publicPages = ["/index.html", "/register.html"];
-      
-         if (
-            req.path.endsWith(".html") &&
-            !publicPages.includes(req.path) &&
-            !req.session?.userId
-         ) {
-            return res.redirect("/index.html");
-         }
-      
-         next();
-      });
-      
-
       //check if only one account is logged in at a time
       app.use((req, res, next) => {
          //if someone is logged in
@@ -71,7 +56,7 @@ async function main() {
       });
 
 
-      app.use(express.static("public"));
+      app.use(express.static(clientDistPath));
 
       
 
@@ -85,56 +70,46 @@ async function main() {
       // :white_check_mark: LOGIN ROUTE — MUST BE HERE
       
       
+      const sendReactApp = (res) => res.sendFile(path.join(clientDistPath, "index.html"));
+
       app.get("/", function(req, res){
-         res.sendFile('index.html', { root: path.join(__dirname, 'public') });
-         
+         sendReactApp(res);
       });
-      
-      app.get("/api/register",async function(req, res){
-         
-         res.sendFile('register.html', { root: path.join(__dirname, 'public') });
-         
+
+      app.get("/index.html", function(req, res){
+         return res.redirect("/");
+      });
+
+      app.get("/register", function(req, res){
+         sendReactApp(res);
+      });
+
+      app.get("/register.html", function(req, res){
+         return res.redirect("/register");
+      });
+
+      app.get("/api/register", async function(req, res){
+         return res.redirect("/register");
       });
 
       // Protected routes - require authentication
-      
-
-   app.get("/gameHome", requireAuth, (req, res) => {
-      res.sendFile(path.join(__dirname, "public", "gameHome.html"));
-   });
-
-   app.get("/progiRoom", requireAuth, (req, res) => {
-      res.sendFile(path.join(__dirname, "public", "ProgiRoom.html"));
-   });
-
-   app.get("/progiFood", requireAuth, (req, res) => {
-      res.sendFile(path.join(__dirname, "public", "ProgiFood.html"));
-   });
-
-   app.get("/inventory", requireAuth, (req, res) => {
-      res.sendFile(path.join(__dirname, "public", "Inventory.html"));
-   });
-
-   app.get("/lookup", requireAuth, (req, res) => {
-      res.sendFile(path.join(__dirname, "public", "LookUp.html"));
-   });
-
-   app.get("/draw", requireAuth, (req, res) => {
-      res.sendFile(path.join(__dirname, "public", "draw.html"));
-   });
-
-   app.get("/dum", requireAuth, (req, res) => {
-      res.sendFile(path.join(__dirname, "public", "dum.html"));
-   });
-
-   app.get("/reactTest", requireAuth, (req, res) => {
-      res.sendFile(path.join(__dirname, "public", "ReactTest.html"));
-   });
-
-   
-   app.get("/accpage", requireAuth, (req, res) => {
-      res.sendFile(path.join(__dirname, "public", "accpage.html"));
-   });
+      const protectedClientRoutes = [
+         "/gameHome",
+         "/progiRoom",
+         "/progiFood",
+         "/inventory",
+         "/lookup",
+         "/draw",
+         "/dum",
+         "/reactTest",
+         "/accpage",
+         "/dum.html"
+      ];
+      protectedClientRoutes.forEach((route) => {
+         app.get(route, requireAuth, (req, res) => {
+            sendReactApp(res);
+         });
+      });
 
 
 
@@ -305,6 +280,7 @@ async function main() {
       newProgimon = req.body;
       id = req.params.id;
       progi = await Progimon.findById(id);
+      populate("parentUser", "User"); 
       
       if(progi){ // progimon exists
          await Progimon.updateOne({_id: id}, {$set: newProgimon});
@@ -356,7 +332,7 @@ async function main() {
                //protected map route
                //might not work
                app.get("/map", requireAuth, (req, res) => {
-                  res.sendFile("map.html", { root: path.join(__dirname, "public") });
+                  res.redirect("/dum");
                });            
                
                //delete

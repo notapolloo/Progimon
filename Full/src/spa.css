@@ -1,0 +1,57 @@
+.spa-page {
+  min-height: 100vh;
+  padding: 12px;
+}
+
+.spa-link-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #0b3b4b;
+  text-decoration: underline;
+  font-size: 1rem;
+}
+
+.spa-form-message {
+  text-align: center;
+  color: #8b0000;
+  margin-top: 10px;
+}
+
+.spa-canvas-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.spa-draw-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.spa-draw-controls input,
+.spa-draw-controls button {
+  font-size: 0.95rem;
+}
+
+.spa-draw-canvas {
+  border: 2px solid #1a1a1a;
+  border-radius: 8px;
+  background: #fff;
+  touch-action: none;
+}
+
+@media (max-width: 700px) {
+  .game-home-bg .game-grid {
+    gap: 28px;
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  #logo {
+    max-width: 75%;
+  }
+}
