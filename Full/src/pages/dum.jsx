@@ -55,6 +55,26 @@ export default function HomePage({ navigate }) {
     setSelected(null);
   }
 
+  async function deleteMyProgimon(id) {
+    if (!id) return;
+    const ok = window.confirm("Delete this progimon? This cannot be undone.");
+    if (!ok) return;
+
+    const res = await fetch(`/api/my-progimon/${id}`, {
+      method: "DELETE",
+      credentials: "include"
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      alert(data.error || "Could not delete progimon. You can only delete progimon you created.");
+      return;
+    }
+
+    setProgimon((prev) => prev.filter((p) => p._id !== id));
+    setSelected(null);
+    alert(data.message || "Progimon deleted");
+  }
+
   return (
     <PageShell title="Welcome to Progimon!">
       <div className="top-bar">
@@ -65,6 +85,7 @@ export default function HomePage({ navigate }) {
           <img src="/imgs/BOOK.png" className="icon" onClick={() => navigate("/lookup")} />
           <img src="/imgs/HOUSETOUR.png" className="icon" onClick={() => navigate("/inventory")} />
           <img src="/imgs/MINIGAME.png" className="icon" onClick={() => navigate("/gameHome")} />
+          <button type="button" className="spa-top-button" onClick={() => navigate("/accpage")}>Account</button>
         </div>
       </div>
 
@@ -99,6 +120,7 @@ export default function HomePage({ navigate }) {
           <p>Level: {selected?.level}</p>
           <p>Created By: {selected?.parentUser}</p>
           <button onClick={() => claimProgimon(selected?._id)}>Claim Progimon</button>
+          <button onClick={() => deleteMyProgimon(selected?._id)}>Delete Progimon</button>
         </div>
       </div>
     </PageShell>
