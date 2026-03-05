@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import HomePage from "./pages/HomePage";
-import GameHomePage from "./pages/GameHomePage";
-import ProgiRoomPage from "./pages/ProgiRoomPage";
-import ProgiFoodPage from "./pages/ProgiFoodPage";
-import InventoryPage from "./pages/InventoryPage";
-import LookupPage from "./pages/LookupPage";
-import DrawPage from "./pages/DrawPage";
-import AccountPage from "./pages/AccountPage";
+import LoginPage from "./pages/index";
+import RegisterPage from "./pages/register";
+import HomePage from "./pages/dum";
+import GameHomePage from "./pages/gameHome";
+import ProgiRoomPage from "./pages/ProgiRoom";
+import ProgiFoodPage from "./pages/ProgiFood";
+import InventoryPage from "./pages/Inventory";
+import LookupPage from "./pages/LookUp";
+import DrawPage from "./pages/draw";
+import AccountPage from "./pages/accpage";
+import Game2Page from "./pages/Game2";
 
 const protectedRoutes = new Set([
   "/gameHome",
@@ -19,7 +20,8 @@ const protectedRoutes = new Set([
   "/draw",
   "/dum",
   "/reactTest",
-  "/accpage"
+  "/accpage",
+  "/Game2"
 ]);
 
 function normalizePath(pathname) {
@@ -92,6 +94,7 @@ export default function App() {
     "/lookup": <LookupPage {...pageProps} />,
     "/draw": <DrawPage {...pageProps} />,
     "/accpage": <AccountPage {...pageProps} />,
+    "/Game2": <Game2Page {...pageProps} />,
     "/reactTest": <HomePage {...pageProps} />
   };
 
