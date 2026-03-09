@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import PageShell from "../components/PageShell";
+import wmc1Icon from "../img/wmc1.ico";
+import itunesIcon from "../img/itunes1.ico";
+import bookIcon from "../img/BOOK.png";
+import houseTourIcon from "../img/HOUSETOUR.png";
+import minigameIcon from "../img/MINIGAME.png";
+import refreshIcon from "../img/REFRESHME.png";
+import catFallback from "../img/cat.png";
+import cleverBoyLoop from "../music/clever boy (apollo pet trader)/clever boy (loopable).ogg";
 
 export default function HomePage({ navigate }) {
   const [progimon, setProgimon] = useState([]);
@@ -80,19 +88,19 @@ export default function HomePage({ navigate }) {
       <div className="top-bar">
         <div className="left-spacer" />
         <div className="header-icons">
-          <img src="/imgs/wmc1.ico" className="icon" onClick={logout} />
-          <img src="/imgs/itunes1.ico" className="icon" onClick={playAudio} />
-          <img src="/imgs/BOOK.png" className="icon" onClick={() => navigate("/lookup")} />
-          <img src="/imgs/HOUSETOUR.png" className="icon" onClick={() => navigate("/inventory")} />
-          <img src="/imgs/MINIGAME.png" className="icon" onClick={() => navigate("/gameHome")} />
+          <img src={wmc1Icon} className="icon" onClick={logout} />
+          <img src={itunesIcon} className="icon" onClick={playAudio} />
+          <img src={bookIcon} className="icon" onClick={() => navigate("/lookup")} />
+          <img src={houseTourIcon} className="icon" onClick={() => navigate("/inventory")} />
+          <img src={minigameIcon} className="icon" onClick={() => navigate("/gameHome")} />
           <button type="button" className="spa-top-button" onClick={() => navigate("/accpage")}>Account</button>
         </div>
       </div>
 
-      <audio ref={audioRef} loop src="/music/clever boy (apollo pet trader)/clever boy (loopable).ogg" />
+      <audio ref={audioRef} loop src={cleverBoyLoop} />
 
       <div className="refresh-container">
-        <img src="/imgs/REFRESHME.png" className="refresh-button" onClick={() => window.location.reload()} />
+        <img src={refreshIcon} className="refresh-button" onClick={() => window.location.reload()} />
       </div>
 
       <div id="progiSpace">
@@ -104,7 +112,7 @@ export default function HomePage({ navigate }) {
         <ul style={{ listStyle: "none", display: "flex", flexWrap: "wrap", gap: "1rem", justifyContent: "center", padding: 0 }}>
           {progimon.map((m) => (
             <li key={m._id} style={{ width: 200, textAlign: "center", color: "white", cursor: "pointer" }} onClick={() => setSelected(m)}>
-              <img src={m.img_url} alt={m.name || "monster"} style={{ width: "auto", height: 200 }} onError={(e) => (e.currentTarget.src = "/imgs/cat.png")} />
+              <img src={m.img_url} alt={m.name || "monster"} style={{ width: "auto", height: 200 }} onError={(e) => (e.currentTarget.src = catFallback)} />
               <div><strong>{m.name || "Unnamed"}</strong></div>
               <div>Level {m.level}</div>
             </li>

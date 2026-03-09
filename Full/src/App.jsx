@@ -9,7 +9,11 @@ import InventoryPage from "./pages/Inventory";
 import LookupPage from "./pages/LookUp";
 import DrawPage from "./pages/draw";
 import AccountPage from "./pages/accpage";
+import Game1Page from "./pages/Game1";
 import Game2Page from "./pages/Game2";
+import Game3Page from "./pages/Game3";
+import Game4Page from "./pages/Game4";
+
 
 const protectedRoutes = new Set([
   "/gameHome",
@@ -21,7 +25,10 @@ const protectedRoutes = new Set([
   "/dum",
   "/reactTest",
   "/accpage",
-  "/Game2"
+  "/Game1",
+  "/Game2",
+  "/Game3",
+  "/Game4"
 ]);
 
 function normalizePath(pathname) {
@@ -94,8 +101,10 @@ export default function App() {
     "/lookup": <LookupPage {...pageProps} />,
     "/draw": <DrawPage {...pageProps} />,
     "/accpage": <AccountPage {...pageProps} />,
+    "/Game1": <Game1Page {...pageProps} />,
     "/Game2": <Game2Page {...pageProps} />,
-    "/reactTest": <HomePage {...pageProps} />
+    "/Game3": <Game3Page {...pageProps} />,
+    "/Game4": <Game4Page {...pageProps} />,
   };
 
   return routes[path] ?? <LoginPage {...pageProps} />;

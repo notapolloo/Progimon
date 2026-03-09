@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PageShell from "../components/PageShell";
+import progimonTitle from "../img/progimonTitle.png";
 
 export default function LoginPage({ navigate }) {
   const [User, setUser] = useState("");
@@ -57,7 +58,7 @@ export default function LoginPage({ navigate }) {
         </p>
       </div>
 
-      <img id="logo" src="/imgs/progimonTitle.png" alt="Progimon Steve" title="Steve the first progimon" />
+      <img id="logo" src={progimonTitle} alt="Progimon Steve" title="Steve the first progimon" />
       {error ? <p className="spa-form-message">{error}</p> : null}
     </PageShell>
   );

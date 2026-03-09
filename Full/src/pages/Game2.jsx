@@ -182,7 +182,7 @@ export default function Game2({ navigate }) {
   }
 
   return (
-    <PageShell title="Fruit Basket (Game2)">
+    <PageShell title="Fruit Basket">
       <div className="spa-game2-panel">
         <p><strong>Score:</strong> {score}</p>
         <p><strong>Lives:</strong> {lives}</p>

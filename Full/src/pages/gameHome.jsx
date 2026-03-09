@@ -1,11 +1,16 @@
 import PageShell from "../components/PageShell";
+import cookieImg from "../img/COOKIE.png";
+import basketImg from "../img/basket.png";
+import cardImg from "../img/card.png";
+import bushImg from "../img/bush.png";
+
 
 export default function GameHomePage({ navigate }) {
   const games = [
-    { href: "/gamesHTML/Game1.html", img: "/imgs/COOKIE.png", name: "Cookie Clicker" },
-    { route: "/Game2", img: "/imgs/basket.png", name: "Fruit Basket" },
-    { href: "/gamesHTML/Game3.html", img: "/imgs/card.png", name: "Memory Cards" },
-    { href: "/gamesHTML/Game4.html", img: "/imgs/bush.png", name: "Wack-a-Steve!" }
+    { route: "/Game1", img: cookieImg, name: "Cookie Clicker" },
+    { route: "/Game2", img: basketImg, name: "Fruit Basket" },
+    { route: "/Game3", img: cardImg, name: "Memory Cards" },
+    { route: "/Game4", img: bushImg, name: "Wack-a-Steve!" }
   ];
 
   return (

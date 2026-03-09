@@ -95,6 +95,7 @@ async function main() {
       // Protected routes - require authentication
       const protectedClientRoutes = [
          "/gameHome",
+        // "/Game1",
          "/Game2",
          "/progiRoom",
          "/progiFood",

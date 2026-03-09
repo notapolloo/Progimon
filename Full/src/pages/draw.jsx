@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import PageShell from "../components/PageShell";
 
+
 const TOOL_OPTIONS = [
   { id: "brush", label: "Brush" },
   { id: "pencil", label: "Pencil" },
@@ -222,6 +223,7 @@ export default function DrawPage({ navigate }) {
     pushHistory();
   }
 
+
   function undoLast() {
     if (historyRef.current.length <= 1) return;
     historyRef.current.pop();
@@ -235,6 +237,29 @@ export default function DrawPage({ navigate }) {
     link.download = `progimon-${Date.now()}.png`;
     link.click();
   }
+
+
+  // Event listeners
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const modKey = event.ctrlKey || event.metaKey;
+      const isUndoKey = event.key?.toLowerCase() === "z" || event.code === "KeyZ";
+      if (!modKey || event.shiftKey || !isUndoKey) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      undoLast();
+    };
+
+    // Capture phase grabs the shortcut before browser/input default undo.
+    document.addEventListener("keydown", handleKeyDown, true);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown, true);
+    };
+  }, []);
+
+  //--  
 
   async function createProgimon(e) {
     e.preventDefault();
