@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PageShell from "../components/PageShell";
 import progimonTitle from "../img/progimonTitle.png";
+import logo from "../img/logo.png";
 
 export default function LoginPage({ navigate }) {
   const [User, setUser] = useState("");
@@ -30,7 +31,11 @@ export default function LoginPage({ navigate }) {
   }
 
   return (
-    <PageShell title="Welcome to Progimon">
+    
+    <PageShell  >
+
+      <img id="logo" src={logo} alt="Progimon Logo" title="Progimon!" />
+      <div id="green-bg">
       <form id="login-form" onSubmit={onSubmit}>
         <label htmlFor="username">Username:</label>
         <input id="username" required value={User} onChange={(e) => setUser(e.target.value)} />
@@ -50,7 +55,7 @@ export default function LoginPage({ navigate }) {
       </form>
 
       <div id="register-link">
-        <p>
+        <p >
           Don&apos;t have an account?{" "}
           <button className="spa-link-button" onClick={() => navigate("/register")}>
             Register here
@@ -60,6 +65,7 @@ export default function LoginPage({ navigate }) {
 
       <img id="logo" src={progimonTitle} alt="Progimon Steve" title="Steve the first progimon" />
       {error ? <p className="spa-form-message">{error}</p> : null}
+      </div>
     </PageShell>
   );
 }

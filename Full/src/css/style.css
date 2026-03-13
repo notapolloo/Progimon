@@ -1,25 +1,51 @@
 #main-heading3 {
-    text-shadow: 2px 3px 0 rgb(255, 255, 255); 
-    color:rgb(1, 61, 74);
+    border-radius: 25px;
+    background-color: #e3ebd8;
+    text-shadow: 2px 3px 0 rgb(255, 255, 255);
+    color: #013d4a;
+    padding: 10px;
+    border: 10px solid #1e6245;
     font-size: 3em;
     text-align: center;
     
 }
+
 #login-form {
-    margin: 0 auto;
-    width: 300px;
+        display: flex;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    width: 400px;
+    border: 10px solid #f9ae67;
+    border-radius: 25px;
+    background-color: #fff8fa;
+    flex-direction: column;
 }
-#main-bg3{
-    background-color: #8ae482;
-    background-size: cover;
+
+#register-link{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#green-bg{
+    border-radius: 50px;
+    border-radius: 50px;
+    display: flex;
+    background-color: #84031d;
+    border: 10px solid #f9ae67;
     background-position: center;
     background-attachment: fixed;
-    min-height: 100vh;
+    padding: 5px;
     overflow: hidden;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+#main-bg3{
+    background-image: url('../img/bgs/forest_1.jpg');
+    background-color: #8ae482;
+    background-size: cover;
 
 }
 
@@ -34,7 +60,7 @@
 #logo {
     display: block;
     margin: 20px auto;
-    max-width: 35%;
+    max-width: 50%;
     height: auto;
 }
 
