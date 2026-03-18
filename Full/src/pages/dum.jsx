@@ -62,26 +62,6 @@ export default function HomePage({ navigate }) {
     alert(data.message || data.error || "Claim result unavailable");
     setSelected(null);
   }
-/*  
-  async function deleteMyProgimon(id) {
-    if (!id) return;
-    const ok = window.confirm("Delete this progimon? This cannot be undone.");
-    if (!ok) return;
-
-   const res = await fetch(`/api/my-progimon/${id}`, {
-      method: "DELETE",
-      credentials: "include"
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      alert(data.error || "Could not delete progimon. You can only delete progimon you created.");
-      return;
-    }
-
-    setProgimon((prev) => prev.filter((p) => p._id !== id));
-    setSelected(null);
-    alert(data.message || "Progimon deleted");
-  } */
 
   return (
     <PageShell title="Welcome to Progimon!">
@@ -105,11 +85,12 @@ export default function HomePage({ navigate }) {
 
       <div id="progiSpace">
         {message ? <p style={{ color: "red", textAlign: "center" }}>{message}</p> : null}
+
         {!message && progimon.length === 0 ? (
           <p style={{ color: "white", textAlign: "center" }}>No progimon yet... Weird...</p>
         ) : null}
 
-        <ul style={{ listStyle: "none", display: "flex", flexWrap: "wrap", gap: "1rem", justifyContent: "center", padding: 0 }}>
+        <ul style={{ listStyle: "none", display: "flex", flexWrap: "wrap", gap: "10rem", justifyContent: "center", padding: 0 }}>
           {progimon.map((m) => (
             <li key={m._id} style={{ width: 200, textAlign: "center", color: "white", cursor: "pointer" }} onClick={() => setSelected(m)}>
               <img src={m.img_url} alt={m.name || "monster"} style={{ width: "auto", height: 200 }} onError={(e) => (e.currentTarget.src = catFallback)} />
@@ -128,7 +109,7 @@ export default function HomePage({ navigate }) {
           <p>Level: {selected?.level}</p>
           <p>Created By: {selected?.parentUser}</p>
           <button onClick={() => claimProgimon(selected?._id)}>Claim Progimon</button>
-          <button onClick={() => deleteMyProgimon(selected?._id)}>Delete Progimon</button>
+          
         </div>
       </div>
     </PageShell>

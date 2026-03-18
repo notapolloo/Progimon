@@ -5,8 +5,8 @@ const http = require("http");
 num_visits = 0;
 const express = require("express");
 const app = express();
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: "15mb" }));
+app.use(express.json({ limit: "15mb" }));
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
@@ -20,8 +20,8 @@ const MongoStore = require("connect-mongo").default;
 main();
 async function main() {
    mongoose.connect('mongodb://localhost/progimon');
-   app.use(express.json());
-   app.use(express.urlencoded({ extended: true }));
+   app.use(express.json({ limit: "15mb" }));
+   app.use(express.urlencoded({ extended: true, limit: "15mb" }));
    
    const clientDistPath = path.join(__dirname, "dist");
    
@@ -95,13 +95,15 @@ async function main() {
       // Protected routes - require authentication
       const protectedClientRoutes = [
          "/gameHome",
-         // "/Game1",
+         "/Game1",
          "/Game2",
          "/progiRoom",
          "/progiFood",
          "/inventory",
          "/lookup",
          "/draw",
+         "/drawPad",
+         "/drawpad",
          "/dum",
          "/reactTest",
          "/accpage",
@@ -170,7 +172,7 @@ async function main() {
       name: {type: String, required: true},
       level: {type: Number, required: true},
       img_url: {type: String, required: true},
-      parentUser: { type: String, required: true },// username of owner maybe link to acc page
+      parentUser: { type: String, required: true },
       bg_url: {type: String, default: ""}
       
    });
@@ -358,10 +360,26 @@ async function main() {
    });
    
    app.put("/api/my-progimon/:id/background", requireAuth, async function(req, res){
-      const id = req.params.id;
-      const mine = await Progimon.findOne({ _id: id, parentUser: req.session.userId });
-      if (!mine) {
-         return res.status(404).json({ error: "Progimon not found for this user" });
+      try {
+         const id = req.params.id;
+         const bg_url = req.body?.bg_url;
+
+         if (typeof bg_url !== "string" || !bg_url.startsWith("data:image/")) {
+            return res.status(400).json({ error: "bg_url (data URL) required" });
+         }
+
+         const mine = await Progimon.findOne({ _id: id, parentUser: req.session.userId });
+         if (!mine) {
+            return res.status(404).json({ error: "Progimon not found for this user" });
+         }
+
+         mine.bg_url = bg_url;
+         await mine.save();
+
+         return res.json({ success: true, progimon: mine });
+      } catch (err) {
+         console.error("Failed to update background", err);
+         return res.status(500).json({ error: "Server error" });
       }
    });
    
@@ -498,10 +516,36 @@ async function main() {
                         }
                      });
                      app.get("/api/my-inventory", requireAuth, async (req, res) => {
-                        const user = await Accounts.findById(req.session.userId)
-                        .populate("inventory");
-                        
-                        res.json(user.inventory);
+                        try {
+                           const user = await Accounts.findById(req.session.userId).populate("inventory");
+                           const inventory = Array.isArray(user?.inventory) ? user.inventory : [];
+
+                           const possibleIds = [...new Set(
+                              inventory
+                                 .map((p) => p?.parentUser)
+                                 .filter((val) => typeof val === "string" && mongoose.Types.ObjectId.isValid(val))
+                           )];
+
+                           let usernameById = new Map();
+                           if (possibleIds.length > 0) {
+                              const creators = await Accounts.find({ _id: { $in: possibleIds } })
+                                 .select("_id User")
+                                 .lean();
+                              usernameById = new Map(creators.map((acc) => [String(acc._id), acc.User]));
+                           }
+
+                           const normalized = inventory.map((p) => {
+                              const key = typeof p?.parentUser === "string" ? p.parentUser : "";
+                              const resolvedName = usernameById.get(key);
+                              if (!resolvedName) return p;
+                              return { ...p.toObject(), parentUser: resolvedName };
+                           });
+
+                           res.json(normalized);
+                        } catch (err) {
+                           console.error("Failed to get inventory", err);
+                           res.status(500).json({ error: "Server error" });
+                        }
                      });
                      
                      app.get("/api/my-progimon", requireAuth, async (req, res) => {

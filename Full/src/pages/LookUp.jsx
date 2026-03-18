@@ -3,7 +3,7 @@ import PageShell from "../components/PageShell";
 
 export default function LookupPage() {
   const [progimon, setProgimon] = useState([]);
-
+  
   useEffect(() => {
     fetch("/api/my-inventory")
       .then((res) => res.json())
@@ -19,7 +19,7 @@ export default function LookupPage() {
             <img src={p.img_url} />
             <h3>{p.name}</h3>
             <p>Level: {p.level}</p>
-            <p>Created By: {p.parentUser || "Unknown"}</p>
+            <p>Created By: {p.parentUser  || "Unknown"}</p>
           </div>
         ))}
       </div>

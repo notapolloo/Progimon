@@ -46,7 +46,19 @@
     background-image: url('../img/bgs/forest_1.jpg');
     background-color: #8ae482;
     background-size: cover;
+    background-attachment: fixed;
 
+}
+
+#progiSpace{
+    background-color: #8ae482;
+    overflow: hidden;
+    width: auto;
+    border-radius: 20px;
+}
+#inventory-container{
+    background-color: #8ae482;
+    border-radius: 20px;
 }
 
 #musik2 {

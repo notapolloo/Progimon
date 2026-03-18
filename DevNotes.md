@@ -30,4 +30,4 @@ Add an authenticated update route: prefer a new endpoint (so you can enforce own
 
 Make a “Draw Background” page: copy/reuse Full/src/pages/draw.jsx but change the submit to fetch("PUT /api/my-progimon/:id/background", { bg_url: canvas.toDataURL(...) }). Add the route in Full/src/App.jsx and add it to the protected routes in Full/server.js (the protectedClientRoutes array).
 
-Wire it from Inventory: in Full/src/pages/Inventory.jsx, in the modal for selected, add a button that navigates to the background-draw route with the progimon id (query string is simplest). Render it by wrapping the monster image in a div with style={{ backgroundImage: selected?.bg_url ? \url(${selected.bg_url})` : "none" }}`.
+Wire it from Inventory: in Full/src/pages/Inventory.jsx, in the modal for selected, add a button that navigates to the background-draw route with the progimon id (query string is simplest). Render it by wrapping the monster image in a div with style={{ backgroundImage: selected?.bg_url ? \url(${selected.bg_url})` : "none" }}`.  

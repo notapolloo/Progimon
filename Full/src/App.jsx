@@ -8,6 +8,7 @@ import ProgiFoodPage from "./pages/ProgiFood";
 import InventoryPage from "./pages/Inventory";
 import LookupPage from "./pages/LookUp";
 import DrawPage from "./pages/draw";
+import DrawPadPage from "./pages/drawPad";
 import AccountPage from "./pages/accpage";
 import Game1Page from "./pages/Game1";
 import Game2Page from "./pages/Game2";
@@ -22,6 +23,7 @@ const protectedRoutes = new Set([
   "/inventory",
   "/lookup",
   "/draw",
+  "/drawPad",
   "/dum",
   "/reactTest",
   "/accpage",
@@ -32,10 +34,22 @@ const protectedRoutes = new Set([
 ]);
 
 function normalizePath(pathname) {
-  if (pathname === "/index.html") return "/";
-  if (pathname === "/register.html") return "/register";
-  if (pathname === "/dum.html") return "/dum";
-  return pathname;
+  if (!pathname) return "/";
+
+  const trimmed = pathname.replace(/\/+$/, "") || "/";
+
+  const aliases = {
+    "/index.html": "/",
+    "/register.html": "/register",
+    "/dum.html": "/dum",
+
+    // common typos / casing variants
+    "/drawpad": "/drawPad",
+    "/ProgiRoom": "/progiroom",
+
+  };
+
+  return aliases[trimmed] ?? aliases[trimmed.toLowerCase()] ?? trimmed;
 }
 
 export default function App() {
@@ -100,6 +114,7 @@ export default function App() {
     "/inventory": <InventoryPage {...pageProps} />,
     "/lookup": <LookupPage {...pageProps} />,
     "/draw": <DrawPage {...pageProps} />,
+    "/drawPad": <DrawPadPage {...pageProps} />,
     "/accpage": <AccountPage {...pageProps} />,
     "/Game1": <Game1Page {...pageProps} />,
     "/Game2": <Game2Page {...pageProps} />,
