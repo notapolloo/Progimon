@@ -24,9 +24,9 @@ async function main() {
    app.use(express.urlencoded({ extended: true }));
    
    const clientDistPath = path.join(__dirname, "dist");
-
+   
    app.use(cors());
-
+   
    
    app.use(
       session({
@@ -43,8 +43,8 @@ async function main() {
          },
          
       }));
-
-
+      
+      
       //check if only one account is logged in at a time
       app.use((req, res, next) => {
          //if someone is logged in
@@ -54,12 +54,12 @@ async function main() {
          }
          next();
       });
-
-
-      app.use(express.static(clientDistPath));
-
       
-
+      
+      app.use(express.static(clientDistPath));
+      
+      
+      
       function requireAuth(req, res, next) {
          if (req.session.userId === undefined) {
             return res.redirect('/index.html');
@@ -71,31 +71,31 @@ async function main() {
       
       
       const sendReactApp = (res) => res.sendFile(path.join(clientDistPath, "index.html"));
-
+      
       app.get("/", function(req, res){
          sendReactApp(res);
       });
-
+      
       app.get("/index.html", function(req, res){
          return res.redirect("/");
       });
-
+      
       app.get("/register", function(req, res){
          sendReactApp(res);
       });
-
+      
       app.get("/register.html", function(req, res){
          return res.redirect("/register");
       });
-
+      
       app.get("/api/register", async function(req, res){
          return res.redirect("/register");
       });
-
+      
       // Protected routes - require authentication
       const protectedClientRoutes = [
          "/gameHome",
-        // "/Game1",
+         // "/Game1",
          "/Game2",
          "/progiRoom",
          "/progiFood",
@@ -112,10 +112,10 @@ async function main() {
             sendReactApp(res);
          });
       });
-
-
-
-
+      
+      
+      
+      
       //login route and logout route
       app.post("/login", async (req, res) => {
          try {const { User, password } = req.body;
@@ -150,11 +150,11 @@ async function main() {
          res.json({ message: "Logged out" });
       });
    });
-
-
-
-
-
+   
+   
+   
+   
+   
    // Define Mongoose schemas and models
    const AccountSchema = new mongoose.Schema({ 
       User: {type: String, required: true},
@@ -164,13 +164,15 @@ async function main() {
       inventory: [{
          type: mongoose.Schema.Types.ObjectId,
          ref: "Progimon"
-       }]
+      }]
    });
    const progimonSchema = new mongoose.Schema({ 
       name: {type: String, required: true},
       level: {type: Number, required: true},
       img_url: {type: String, required: true},
-      parentUser: { type: String, required: true }// username of owner maybe link to acc page
+      parentUser: { type: String, required: true },// username of owner maybe link to acc page
+      bg_url: {type: String, default: ""}
+      
    });
    const Progimon = mongoose.model("Progimon", progimonSchema);
    const Accounts = mongoose.model("Accounts", AccountSchema);
@@ -182,18 +184,18 @@ async function main() {
          const progimon = await Progimon.find().lean();
          const possibleIds = [...new Set(
             progimon
-               .map((p) => p.parentUser)
-               .filter((val) => typeof val === "string" && mongoose.Types.ObjectId.isValid(val))
+            .map((p) => p.parentUser)
+            .filter((val) => typeof val === "string" && mongoose.Types.ObjectId.isValid(val))
          )];
-
+         
          let usernameById = new Map();
          if (possibleIds.length > 0) {
             const creators = await Accounts.find({ _id: { $in: possibleIds } })
-               .select("_id User")
-               .lean();
+            .select("_id User")
+            .lean();
             usernameById = new Map(creators.map((acc) => [String(acc._id), acc.User]));
          }
-
+         
          const normalized = progimon.map((p) => {
             const key = typeof p.parentUser === "string" ? p.parentUser : "";
             const resolvedName = usernameById.get(key);
@@ -202,7 +204,7 @@ async function main() {
                parentUser: resolvedName || p.parentUser
             };
          });
-
+         
          res.json(normalized);
       }catch(err){
          console.error('Failed to get progimon', err);
@@ -221,23 +223,23 @@ async function main() {
    }); 
    
    //POST
-/*    app.post("/api/progimon", requireAuth, async (req, res) => {
+   /*    app.post("/api/progimon", requireAuth, async (req, res) => {
       console.log(req)
-      const progi = await Progimon.create(req.body);
-      return res.redirect("/dum.html");
-      //res.send(progi + " said, 'it's progin' time' and progied all over the place.");
+   const progi = await Progimon.create(req.body);
+   return res.redirect("/dum.html");
+   //res.send(progi + " said, 'it's progin' time' and progied all over the place.");
    }); */
    app.post("/api/progimon", requireAuth, async (req, res) => {
-
-    const progi = await Progimon.create({
-        name: req.body.name,
-        level: req.body.level,
-        img_url: req.body.img_url,
-        parentUser: req.session.userId   
-    });
-
-    return res.redirect("/dum.html");
-});
+      
+      const progi = await Progimon.create({
+         name: req.body.name,
+         level: req.body.level,
+         img_url: req.body.img_url,
+         parentUser: req.session.userId
+      });
+      
+      return res.redirect("/dum.html");
+   });
    //--
    app.post("/api/ACCOUNTSDEV", async (req, res) => {
       try {
@@ -267,9 +269,9 @@ async function main() {
          // Optional: auto-login right after register
          req.session.userId = newAccount._id.toString();
          req.session.username = newAccount.User;
-
+         
          return res.redirect("/draw");
-
+         
          
          //res.status(201).send({ message: "Welcome to the world of Progis man!", user: newAccount.User });
       } catch (err) {
@@ -277,40 +279,40 @@ async function main() {
          res.status(500).send({ error: "Server error brodie" });
       }
    });
-
+   
    app.post("/api/claim", requireAuth, async (req, res) => {
       try {
-        const { progimonId } = req.body;
-    
-        const user = await Accounts.findById(req.session.userId);
-    
-        if (user.inventory.includes(progimonId)) {
-          return res.json({ message: "Already claimed!" });
-        }
-    
-        user.inventory.push(progimonId);
-        await user.save();
-    
-        res.json({ message: "Claim successful!" });
-    
+         const { progimonId } = req.body;
+         
+         const user = await Accounts.findById(req.session.userId);
+         
+         if (user.inventory.includes(progimonId)) {
+            return res.json({ message: "Already claimed!" });
+         }
+         
+         user.inventory.push(progimonId);
+         await user.save();
+         
+         res.json({ message: "Claim successful!" });
+         
       } catch (err) {
-        res.status(500).json({ error: "Claim failed" });
+         res.status(500).json({ error: "Claim failed" });
       }
-    });
-
+   });
+   
    app.post("/api/minigame/game2/reward", requireAuth, async (req, res) => {
       try {
          const rawScore = Number(req.body?.score);
          const safeScore = Number.isFinite(rawScore) ? Math.max(0, Math.floor(rawScore)) : 0;
          const normalizedScore = Math.min(safeScore, 200);
          const earned = Math.min(30, Math.floor(normalizedScore / 2));
-
+         
          const updated = await Accounts.findByIdAndUpdate(
             req.session.userId,
             { $inc: { progiFood: earned } },
             { new: true }
          ).select("progiFood");
-
+         
          return res.json({
             earned,
             score: safeScore,
@@ -321,8 +323,8 @@ async function main() {
          return res.status(500).json({ error: "Reward failed" });
       }
    });
-
-
+   
+   
    
    //PUT
    //showcase?
@@ -352,6 +354,14 @@ async function main() {
          res.send({"id": account["_id"], "account": account});
       }else{
          res.status(404).send({"error": 404, "msg":"Does bro even exist yet? I don't see them in my omniscient awareness of all users."});
+      }
+   });
+   
+   app.put("/api/my-progimon/:id/background", requireAuth, async function(req, res){
+      const id = req.params.id;
+      const mine = await Progimon.findOne({ _id: id, parentUser: req.session.userId });
+      if (!mine) {
+         return res.status(404).json({ error: "Progimon not found for this user" });
       }
    });
    
@@ -415,13 +425,13 @@ async function main() {
                      }else{
                         res.status(404).send({"error": 404, "msg":"Error! Brodie doesn't wanna sleep just yet!"});
                      }});  
-
+                     
                      //who am I test 
                      app.get("/api/me", async (req, res) => {
                         if (!req.session.userId) {
                            return res.status(401).json({ loggedIn: false, message: "Not logged in req.session.userId is " + req.session.userId });
                         }
-
+                        
                         const account = await Accounts.findById(req.session.userId).select("progiFood");
                         res.json({
                            loggedIn: true,
@@ -431,7 +441,7 @@ async function main() {
                            "message": `Welcome back, ${req.session.username}! Your user ID is ${req.session.userId}.`
                         });
                      });
-
+                     
                      app.get("/api/me/resources", requireAuth, async (req, res) => {
                         try {
                            const account = await Accounts.findById(req.session.userId).select("progiFood");
@@ -441,7 +451,7 @@ async function main() {
                            return res.status(500).json({ error: "Server error" });
                         }
                      });
-
+                     
                      // Check active sessions
                      app.get("/api/sessions", async (req, res) => {
                         try {
@@ -464,7 +474,7 @@ async function main() {
                            res.status(500).json({ error: 'Server error' });
                         }
                      });
-
+                     
                      // Check sessions for current user
                      app.get("/api/my-sessions", requireAuth, async (req, res) => {
                         try {
@@ -489,11 +499,11 @@ async function main() {
                      });
                      app.get("/api/my-inventory", requireAuth, async (req, res) => {
                         const user = await Accounts.findById(req.session.userId)
-                          .populate("inventory");
-                      
+                        .populate("inventory");
+                        
                         res.json(user.inventory);
-                      });
-
+                     });
+                     
                      app.get("/api/my-progimon", requireAuth, async (req, res) => {
                         try {
                            const mine = await Progimon.find({ parentUser: req.session.userId });
@@ -503,7 +513,7 @@ async function main() {
                            res.status(500).json({ error: "Server error" });
                         }
                      });
-
+                     
                      app.delete("/api/my-progimon/:id", requireAuth, async (req, res) => {
                         try {
                            const id = req.params.id;
@@ -511,7 +521,7 @@ async function main() {
                            if (!mine) {
                               return res.status(404).json({ error: "Progimon not found for this user" });
                            }
-
+                           
                            await Progimon.deleteOne({ _id: id });
                            await Accounts.updateMany({}, { $pull: { inventory: id } });
                            return res.json({ message: "Progimon deleted" });
@@ -520,7 +530,7 @@ async function main() {
                            res.status(500).json({ error: "Delete failed" });
                         }
                      });
-
+                     
                      app.delete("/api/my-progimon", requireAuth, async (req, res) => {
                         try {
                            const mine = await Progimon.find({ parentUser: req.session.userId }).select("_id");
@@ -528,7 +538,7 @@ async function main() {
                            if (ids.length === 0) {
                               return res.json({ message: "No progimon to delete", deletedCount: 0 });
                            }
-
+                           
                            const deleteResult = await Progimon.deleteMany({ _id: { $in: ids } });
                            await Accounts.updateMany({}, { $pull: { inventory: { $in: ids } } });
                            return res.json({ message: "All your progimon deleted", deletedCount: deleteResult.deletedCount || 0 });
@@ -548,4 +558,5 @@ async function main() {
                         console.log("its progin' time (port 3000)");
                      });
                   }//last line of main
+                  
                   

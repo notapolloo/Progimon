@@ -24,7 +24,7 @@ export default function InventoryPage() {
         <div className="modal-content">
           <span className="close" onClick={() => setSelected(null)}>&times;</span>
           <h2>{selected?.name}</h2>
-          <img src={selected?.img_url} width="100" />
+          <img src={selected?.img_url} width="300" />
           <p>Level: {selected?.level}</p>
           <p>Created By: {selected?.parentUser}</p>
         </div>

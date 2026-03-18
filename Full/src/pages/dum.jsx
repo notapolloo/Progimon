@@ -62,13 +62,13 @@ export default function HomePage({ navigate }) {
     alert(data.message || data.error || "Claim result unavailable");
     setSelected(null);
   }
-
+/*  
   async function deleteMyProgimon(id) {
     if (!id) return;
     const ok = window.confirm("Delete this progimon? This cannot be undone.");
     if (!ok) return;
 
-    const res = await fetch(`/api/my-progimon/${id}`, {
+   const res = await fetch(`/api/my-progimon/${id}`, {
       method: "DELETE",
       credentials: "include"
     });
@@ -81,7 +81,7 @@ export default function HomePage({ navigate }) {
     setProgimon((prev) => prev.filter((p) => p._id !== id));
     setSelected(null);
     alert(data.message || "Progimon deleted");
-  }
+  } */
 
   return (
     <PageShell title="Welcome to Progimon!">
