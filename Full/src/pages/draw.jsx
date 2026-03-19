@@ -30,6 +30,9 @@ export default function DrawPage({ navigate }) {
   const [brushSize, setBrushSize] = useState(4);
   const [color, setColor] = useState("#111111");
   const [fillShape, setFillShape] = useState(false);
+  const [drawAccess, setDrawAccess] = useState({ unlocked: true, unlockLevel: 5, hasStarter: false, starter: null });
+  const [drawAccessLoading, setDrawAccessLoading] = useState(true);
+  const [drawLockMessage, setDrawLockMessage] = useState("");
 
   function getCtx() {
     return canvasRef.current?.getContext("2d");
@@ -64,6 +67,38 @@ export default function DrawPage({ navigate }) {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     pushHistory();
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/draw-access", { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (cancelled) return;
+        setDrawAccess(data);
+        if (!data?.unlocked && data?.hasStarter) {
+          const starterName = data?.starter?.name || "Your starter Progimon";
+          const starterLevel = Number(data?.starter?.level) || 0;
+          const unlockLevel = Number(data?.unlockLevel) || 5;
+          setDrawLockMessage(`${starterName} is level ${starterLevel}. Reach level ${unlockLevel} to unlock another draw slot.`);
+        } else {
+          setDrawLockMessage("");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setDrawAccess({ unlocked: true, unlockLevel: 5, hasStarter: false, starter: null });
+          setDrawLockMessage("");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setDrawAccessLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function getPos(e) {
@@ -263,6 +298,15 @@ export default function DrawPage({ navigate }) {
 
   async function createProgimon(e) {
     e.preventDefault();
+    if (drawAccessLoading) {
+      return;
+    }
+
+    if (!drawAccess?.unlocked) {
+      alert(drawLockMessage || `Reach level ${drawAccess?.unlockLevel || 5} with your starter Progimon first.`);
+      return;
+    }
+
     if (!name.trim()) {
       alert("Please enter a monster name!");
       return;
@@ -283,12 +327,16 @@ export default function DrawPage({ navigate }) {
     if (res.ok) {
       navigate("/dum");
     } else {
-      alert("Failed to create progimon");
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || "Failed to create progimon");
     }
   }
 
   return (
     <PageShell title="Draw Your Monster Below!" useBg={false}>
+      {drawLockMessage ? (
+        <p style={{ textAlign: "center", color: "white", marginBottom: 12 }}>{drawLockMessage}</p>
+      ) : null}
       <div className="spa-draw-controls">
         <div className="spa-tool-grid">
           {TOOL_OPTIONS.map((t) => (
@@ -352,7 +400,7 @@ export default function DrawPage({ navigate }) {
       </div>
 
       <div style={{ textAlign: "center", marginTop: 10 }}>
-        <button id="createbutton" type="button" onClick={createProgimon}>Create Monster</button>
+        <button id="createbutton" type="button" onClick={createProgimon} disabled={drawAccessLoading || !drawAccess?.unlocked}>Create Monster</button>
       </div>
     </PageShell>
   );

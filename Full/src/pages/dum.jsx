@@ -5,6 +5,7 @@ import itunesIcon from "../img/itunes1.ico";
 import bookIcon from "../img/BOOK.png";
 import houseTourIcon from "../img/HOUSETOUR.png";
 import minigameIcon from "../img/MINIGAME.png";
+import drawIcon from "../img/DRAW.png";
 import refreshIcon from "../img/REFRESHME.png";
 import catFallback from "../img/cat.png";
 import cleverBoyLoop from "../music/clever boy (apollo pet trader)/clever boy (loopable).ogg";
@@ -13,19 +14,28 @@ export default function HomePage({ navigate }) {
   const [progimon, setProgimon] = useState([]);
   const [selected, setSelected] = useState(null);
   const [message, setMessage] = useState("");
+  const [drawAccess, setDrawAccess] = useState({ unlocked: true, unlockLevel: 5, hasStarter: false, starter: null });
   const audioRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/progimon")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to load progimon");
-        return res.json();
-      })
-      .then((data) => {
+    Promise.all([
+      fetch("/api/progimon"),
+      fetch("/api/draw-access", { credentials: "include" })
+    ])
+      .then(async ([progimonRes, drawAccessRes]) => {
+        if (!progimonRes.ok) throw new Error("Failed to load progimon");
+
+        const progimonData = await progimonRes.json();
+        const drawAccessData = drawAccessRes.ok
+          ? await drawAccessRes.json().catch(() => null)
+          : null;
+
         if (cancelled) return;
-        const randomFive = [...data].sort(() => 0.5 - Math.random()).slice(0, 5);
+
+        const randomFive = [...progimonData].sort(() => 0.5 - Math.random()).slice(0, 5);
         setProgimon(randomFive);
+        if (drawAccessData) setDrawAccess(drawAccessData);
       })
       .catch((err) => {
         if (!cancelled) setMessage(err.message);
@@ -63,6 +73,18 @@ export default function HomePage({ navigate }) {
     setSelected(null);
   }
 
+  function goToDraw() {
+    if (drawAccess?.unlocked) {
+      navigate("/draw");
+      return;
+    }
+
+    const starterName = drawAccess?.starter?.name || "your starter Progimon";
+    const starterLevel = Number(drawAccess?.starter?.level) || 0;
+    const unlockLevel = Number(drawAccess?.unlockLevel) || 5;
+    alert(`${starterName} is level ${starterLevel}. Reach level ${unlockLevel} to unlock drawing another Progimon.`);
+  }
+
   return (
     <PageShell title="Welcome to Progimon!">
       <div className="top-bar">
@@ -72,6 +94,12 @@ export default function HomePage({ navigate }) {
           <img src={itunesIcon} className="icon" onClick={playAudio} />
           <img src={bookIcon} className="icon" onClick={() => navigate("/lookup")} />
           <img src={houseTourIcon} className="icon" onClick={() => navigate("/inventory")} />
+          <img
+            src={drawIcon}
+            className={drawAccess?.unlocked ? "icon" : "icon icon-locked"}
+            onClick={goToDraw}
+            title={drawAccess?.unlocked ? "Draw a new Progimon" : `Reach level ${drawAccess?.unlockLevel || 5} with your starter Progimon to unlock`}
+          />
           <img src={minigameIcon} className="icon" onClick={() => navigate("/gameHome")} />
           <button type="button" className="spa-top-button" onClick={() => navigate("/accpage")}>Account</button>
         </div>

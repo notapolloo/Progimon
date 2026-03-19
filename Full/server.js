@@ -178,6 +178,37 @@ async function main() {
    });
    const Progimon = mongoose.model("Progimon", progimonSchema);
    const Accounts = mongoose.model("Accounts", AccountSchema);
+   const DRAW_UNLOCK_LEVEL = 5;
+
+   async function getDrawAccessForUser(userId) {
+      const mine = await Progimon.find({ parentUser: userId })
+         .sort({ _id: 1 })
+         .select("_id name level")
+         .lean();
+
+      if (mine.length === 0) {
+         return {
+            unlocked: true,
+            unlockLevel: DRAW_UNLOCK_LEVEL,
+            hasStarter: false,
+            starter: null
+         };
+      }
+
+      const starter = mine[0];
+      const starterLevel = Number(starter?.level) || 0;
+
+      return {
+         unlocked: starterLevel >= DRAW_UNLOCK_LEVEL,
+         unlockLevel: DRAW_UNLOCK_LEVEL,
+         hasStarter: true,
+         starter: {
+            _id: starter._id,
+            name: starter.name,
+            level: starterLevel
+         }
+      };
+   }
    
    // Return all progimon as JSON
    //GET JSON
@@ -232,6 +263,13 @@ async function main() {
    //res.send(progi + " said, 'it's progin' time' and progied all over the place.");
    }); */
    app.post("/api/progimon", requireAuth, async (req, res) => {
+      const drawAccess = await getDrawAccessForUser(req.session.userId);
+      if (!drawAccess.unlocked && drawAccess.hasStarter) {
+         return res.status(403).json({
+            error: `Your starter Progimon must reach level ${drawAccess.unlockLevel} before you can draw another.`,
+            drawAccess
+         });
+      }
       
       const progi = await Progimon.create({
          name: req.body.name,
@@ -509,6 +547,16 @@ async function main() {
                            progiFood: account?.progiFood ?? 0,
                            "message": `Welcome back, ${req.session.username}! Your user ID is ${req.session.userId}.`
                         });
+                     });
+
+                     app.get("/api/draw-access", requireAuth, async (req, res) => {
+                        try {
+                           const drawAccess = await getDrawAccessForUser(req.session.userId);
+                           return res.json(drawAccess);
+                        } catch (err) {
+                           console.error("Failed to get draw access", err);
+                           return res.status(500).json({ error: "Server error" });
+                        }
                      });
                      
                      app.get("/api/me/resources", requireAuth, async (req, res) => {

@@ -239,6 +239,11 @@ z-index: 3;
     cursor: pointer;
 }
 
+.icon-locked {
+    opacity: 0.45;
+    filter: grayscale(1);
+}
+
 .refresh-container {
     position: sticky;
     display: flex;
@@ -673,4 +678,3 @@ body {
     align-items: center;
     justify-content: center;
 }
-
