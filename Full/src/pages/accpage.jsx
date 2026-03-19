@@ -75,6 +75,7 @@ export default function AccountPage({ navigate }) {
           <h2>Account Information</h2>
           <p><strong>User:</strong> {me?.username || "Unknown"}</p>
           <p><strong>User ID:</strong> {me?.userId || "Unknown"}</p>
+          <p><strong>ProgiFood Amount:</strong> {me?.progiFood || "Unknown"} </p>
           <button type="button" className="spa-top-button" onClick={() => navigate("/dum")}>Back to Home</button>
           <button type="button" className="spa-danger-button" onClick={deleteAll}>Delete All My Progimon</button>
           {status ? <p>{status}</p> : null}

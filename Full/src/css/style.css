@@ -307,7 +307,7 @@ z-index: 3;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/*INVENTORY AND LOOKUP CSS*/
+/*INVENTORY, ACCPAGE, AND LOOKUP CSS*/
 
 .grid {
     display: grid;
@@ -320,7 +320,7 @@ z-index: 3;
 .inventory-img {
     width: 150px;
     height: 150px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 10px;
     transition: 0.2s;
 }
@@ -330,7 +330,8 @@ z-index: 3;
 }
 
 .lookup-card {
-    background: white;
+    background: transparent;
+    color: white;
     padding: 15px;
     border-radius: 12px;
     text-align: center;
@@ -339,7 +340,7 @@ z-index: 3;
 .lookup-card img {
     width: 100%;
     height: 150px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 10px;
 }
 
@@ -392,8 +393,7 @@ z-index: 3;
     margin-top: 12px;
     font-size: 18px;
     font-weight: bold;
-    color: rgb(1, 61, 74);
-    text-shadow: 1px 2px 0 white;
+    color: rgb(255, 255, 255);
 }
 
 
