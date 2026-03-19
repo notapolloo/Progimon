@@ -281,16 +281,25 @@ export default function DrawPage({ navigate }) {
       const isUndoKey = event.key?.toLowerCase() === "z" || event.code === "KeyZ";
       if (!modKey || event.shiftKey || !isUndoKey) return;
 
+      const active = document.activeElement;
+      const isTypingTarget =
+        active &&
+        (active.tagName === "INPUT" ||
+          active.tagName === "TEXTAREA" ||
+          active.tagName === "SELECT" ||
+          active.isContentEditable);
+      if (isTypingTarget) return;
+
       event.preventDefault();
       event.stopPropagation();
       undoLast();
     };
 
-    // Capture phase grabs the shortcut before browser/input default undo.
-    document.addEventListener("keydown", handleKeyDown, true);
+    // Capture phase grabs the shortcut before browser default undo.
+    window.addEventListener("keydown", handleKeyDown, true);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown, true);
+      window.removeEventListener("keydown", handleKeyDown, true);
     };
   }, []);
 

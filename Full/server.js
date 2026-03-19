@@ -133,7 +133,7 @@ async function main() {
             return res.json({ success: false });
          }
          
-         req.session.userId = account._id;
+         req.session.userId = account._id.toString();
          req.session.username = account.User;
          
          res.json({ success: true });
@@ -452,12 +452,13 @@ async function main() {
       try {
          const id = req.params.id;
          const bg_url = req.body?.bg_url;
+         const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
 
          if (typeof bg_url !== "string" || !bg_url.startsWith("data:image/")) {
             return res.status(400).json({ error: "bg_url (data URL) required" });
          }
 
-         const mine = await Progimon.findOne({ _id: id, parentUser: req.session.userId });
+         const mine = await Progimon.findOne({ _id: id, parentUser: sessionUserId });
          if (!mine) {
             return res.status(404).json({ error: "Progimon not found for this user" });
          }
@@ -616,7 +617,8 @@ async function main() {
                      });
                      app.get("/api/my-inventory", requireAuth, async (req, res) => {
                         try {
-                           const user = await Accounts.findById(req.session.userId).populate("inventory");
+                           const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
+                           const user = await Accounts.findById(sessionUserId).populate("inventory");
                            const inventory = Array.isArray(user?.inventory) ? user.inventory : [];
 
                            const possibleIds = [...new Set(
@@ -649,7 +651,8 @@ async function main() {
                      
                      app.get("/api/my-progimon", requireAuth, async (req, res) => {
                         try {
-                           const mine = await Progimon.find({ parentUser: req.session.userId });
+                           const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
+                           const mine = await Progimon.find({ parentUser: sessionUserId });
                            res.json(mine);
                         } catch (err) {
                            console.error("Failed to get user progimon", err);
@@ -660,7 +663,8 @@ async function main() {
                      app.delete("/api/my-progimon/:id", requireAuth, async (req, res) => {
                         try {
                            const id = req.params.id;
-                           const mine = await Progimon.findOne({ _id: id, parentUser: req.session.userId });
+                           const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
+                           const mine = await Progimon.findOne({ _id: id, parentUser: sessionUserId });
                            if (!mine) {
                               return res.status(404).json({ error: "Progimon not found for this user" });
                            }
@@ -676,7 +680,8 @@ async function main() {
                      
                      app.delete("/api/my-progimon", requireAuth, async (req, res) => {
                         try {
-                           const mine = await Progimon.find({ parentUser: req.session.userId }).select("_id");
+                           const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
+                           const mine = await Progimon.find({ parentUser: sessionUserId }).select("_id");
                            const ids = mine.map((p) => p._id);
                            if (ids.length === 0) {
                               return res.json({ message: "No progimon to delete", deletedCount: 0 });

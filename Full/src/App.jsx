@@ -95,9 +95,11 @@ export default function App() {
 
   const navigate = useMemo(
     () => (to) => {
-      const next = normalizePath(to);
-      window.history.pushState({}, "", next);
-      setPath(next);
+      const url = new URL(to, window.location.origin);
+      const nextPath = normalizePath(url.pathname);
+      const nextUrl = `${nextPath}${url.search}${url.hash}`;
+      window.history.pushState({}, "", nextUrl);
+      setPath(nextPath);
     },
     []
   );

@@ -16,7 +16,10 @@ export default function InventoryPage({ navigate }) {
     .then((data) => setInventory(Array.isArray(data) ? data : []))
     .catch(() => setInventory([]));
   }, []);
-  
+  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+
+
   return (
     <PageShell title="Welcome to the Progi-pad!">
     <div style={{ marginBottom: 16, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
@@ -58,14 +61,27 @@ export default function InventoryPage({ navigate }) {
     </div>
     <p>Level: {selected?.level}</p>
     <p>Created By: {selected?.parentUser}</p>
-    <button
+
+
+    {!selected?.bg_url && (
+      <button
+        id="make_room"
+        type="button"
+        onClick={() => go(`/drawpad?id=${encodeURIComponent(selected?._id ?? "")}`)}
+      >
+        Make their ProgiPad!
+      </button>
+    )}
+
+    <button id="go_to_room"
     type="button"
-    disabled={!selected?._id}
-    //onClick={() => go(`/drawPad?id=${encodeURIComponent(selected?._id ?? "")}`)}
+    
+   
     onClick={() => go("/progiRoom")}
     >
     Go to their ProgiPad!
     </button>
+
     </div>
     </div>
     </PageShell>

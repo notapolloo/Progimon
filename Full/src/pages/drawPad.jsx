@@ -25,6 +25,8 @@ export default function DrawPage({ navigate }) {
   const snapshotRef = useRef(null);
   const historyRef = useRef([]);
 
+ 
+
   const [tool, setTool] = useState("brush");
   const [brushSize, setBrushSize] = useState(4);
   const [color, setColor] = useState("#111111");
@@ -62,7 +64,9 @@ export default function DrawPage({ navigate }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     pushHistory();
   }, []);
 
@@ -180,6 +184,7 @@ export default function DrawPage({ navigate }) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const { x, y } = getPos(e);
+    canvas?.focus?.();
 
     setupContext();
     isDrawingRef.current = true;
@@ -219,7 +224,8 @@ export default function DrawPage({ navigate }) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     ctx.globalCompositeOperation = "source-over";
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     pushHistory();
   }
 
@@ -238,24 +244,33 @@ export default function DrawPage({ navigate }) {
     link.click();
   }
 
+  function handleUndoShortcut(event) {
+    const modKey = event.ctrlKey || event.metaKey;
+    const isUndoKey = event.key?.toLowerCase() === "z" || event.code === "KeyZ";
+    if (!modKey || event.shiftKey || !isUndoKey) return;
+
+    const active = document.activeElement;
+    const isTypingTarget =
+      active &&
+      (active.tagName === "INPUT" ||
+        active.tagName === "TEXTAREA" ||
+        active.tagName === "SELECT" ||
+        active.isContentEditable);
+    if (isTypingTarget) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    undoLast();
+  }
+
 
   // Event listeners
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      const modKey = event.ctrlKey || event.metaKey;
-      const isUndoKey = event.key?.toLowerCase() === "z" || event.code === "KeyZ";
-      if (!modKey || event.shiftKey || !isUndoKey) return;
-
-      event.preventDefault();
-      event.stopPropagation();
-      undoLast();
-    };
-
-    // Capture phase grabs the shortcut before browser/input default undo.
-    document.addEventListener("keydown", handleKeyDown, true);
+    // Capture phase grabs the shortcut before browser default undo.
+    window.addEventListener("keydown", handleUndoShortcut, true);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown, true);
+      window.removeEventListener("keydown", handleUndoShortcut, true);
     };
   }, []);
 
@@ -270,7 +285,7 @@ export default function DrawPage({ navigate }) {
       return;
     }
 
-    const bg_url = canvasRef.current.toDataURL("image/png");
+    const progi_pad = canvasRef.current.toDataURL("image/png");
 
     setSaving(true);
     try {
@@ -278,13 +293,22 @@ export default function DrawPage({ navigate }) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ bg_url })
+        body: JSON.stringify({ 
+          bg_url: progi_pad
+        })
       });
 
       if (res.ok) {
         navigate("/inventory");
       } else {
-        alert("Failed to save background");
+        let details = "";
+        try {
+          details = await res.text();
+        } catch {
+          details = "";
+        }
+        console.log("Save background failed:", res.status, details);
+        alert(`Failed to save background (HTTP ${res.status})`);
       }
     } finally {
       setSaving(false);
@@ -341,9 +365,11 @@ export default function DrawPage({ navigate }) {
       <div className="spa-canvas-wrap">
         <canvas
           ref={canvasRef}
+          tabIndex={0}
           width={1000}
           height={600}
           className="spa-draw-canvas"
+          onKeyDown={handleUndoShortcut}
           onPointerDown={startDraw}
           onPointerMove={onDraw}
           onPointerUp={stopDraw}
