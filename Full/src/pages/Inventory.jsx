@@ -19,6 +19,14 @@ export default function InventoryPage({ navigate }) {
   
   return (
     <PageShell title="Welcome to the Progi-pad!">
+    <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
+    <button
+    type="button"
+    onClick={() => go("/progiFood")}
+    >
+    Go to ProgiFood!
+    </button>
+    </div>
     <div id="inventory-container" className="grid">
     {inventory.map((p) => (
       <img key={p._id} src={p.img_url} className="inventory-img" onClick={() => setSelected(p)} />
