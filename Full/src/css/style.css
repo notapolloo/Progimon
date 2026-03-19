@@ -344,6 +344,59 @@ z-index: 3;
     border-radius: 10px;
 }
 
+.spa-account-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+.spa-top-button {
+    font-size: 18px;
+    background-color: #206022;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.spa-top-button:hover {
+    background-color: #63f467;
+}
+
+.spa-top-button:disabled {
+    background-color: #6c8b6d;
+    cursor: not-allowed;
+}
+
+.spa-danger-button {
+    font-size: 18px;
+    background-color: #84031d;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.spa-danger-button:hover {
+    background-color: #b81d3b;
+}
+
+.spa-section-title {
+    color: white;
+    text-align: center;
+    margin-top: 24px;
+}
+
+.spa-chip {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 
@@ -620,5 +673,4 @@ body {
     align-items: center;
     justify-content: center;
 }
-
 

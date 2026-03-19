@@ -19,9 +19,17 @@ export default function InventoryPage({ navigate }) {
   
   return (
     <PageShell title="Welcome to the Progi-pad!">
-    <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
+    <div style={{ marginBottom: 16, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
     <button
     type="button"
+    className="spa-top-button"
+    onClick={() => go("/dum")}
+    >
+    Back to Homepage
+    </button>
+    <button
+    type="button"
+    className="spa-top-button"
     onClick={() => go("/progiFood")}
     >
     Go to ProgiFood!

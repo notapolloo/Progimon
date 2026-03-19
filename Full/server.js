@@ -325,6 +325,57 @@ async function main() {
          return res.status(500).json({ error: "Reward failed" });
       }
    });
+
+   app.post("/api/progifood/feed", requireAuth, async (req, res) => {
+      try {
+         const progimonId = String(req.body?.progimonId || "");
+         if (!mongoose.Types.ObjectId.isValid(progimonId)) {
+            return res.status(400).json({ error: "Valid progimonId required" });
+         }
+
+         const account = await Accounts.findById(req.session.userId).select("progiFood inventory");
+         if (!account) {
+            return res.status(404).json({ error: "Account not found" });
+         }
+
+         const ownsProgimon = Array.isArray(account.inventory)
+            && account.inventory.some((id) => String(id) === progimonId);
+         if (!ownsProgimon) {
+            return res.status(403).json({ error: "You can only feed claimed Progimon" });
+         }
+
+         const currentFood = Number(account.progiFood) || 0;
+         if (currentFood < 1) {
+            return res.status(400).json({ error: "Not enough ProgiFood" });
+         }
+
+         const progimon = await Progimon.findById(progimonId);
+         if (!progimon) {
+            return res.status(404).json({ error: "Progimon not found" });
+         }
+
+         account.progiFood = currentFood - 1;
+         progimon.level = (Number(progimon.level) || 0) + 1;
+
+         await Promise.all([account.save(), progimon.save()]);
+
+         return res.json({
+            message: `${progimon.name} leveled up!`,
+            progiFood: account.progiFood,
+            progimon: {
+               _id: progimon._id,
+               name: progimon.name,
+               level: progimon.level,
+               img_url: progimon.img_url,
+               parentUser: progimon.parentUser,
+               bg_url: progimon.bg_url
+            }
+         });
+      } catch (err) {
+         console.error("Failed to feed progimon", err);
+         return res.status(500).json({ error: "Feeding failed" });
+      }
+   });
    
    
    
