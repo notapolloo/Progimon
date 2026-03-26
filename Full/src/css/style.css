@@ -11,7 +11,7 @@
 }
 
 #login-form {
-        display: flex;
+    display: flex;
     padding: 20px;
     width: 400px;
     border: 10px solid #f9ae67;
@@ -39,7 +39,7 @@
     overflow: hidden;
     flex-direction: column;
     align-items: center;
-
+    
 }
 
 #main-bg3{
@@ -47,7 +47,7 @@
     background-color: #8ae482;
     background-size: cover;
     background-attachment: fixed;
-
+    
 }
 
 #progiSpace{
@@ -130,6 +130,19 @@
     background-color: #63f467; 
 }
 
+#ProgiPad{
+    padding: 20px;
+}
+
+#make_room{
+    background-color: #b1f7b3; 
+}
+#go_to_room{
+    background-color: #b1c0f7; 
+}
+#remake_room{
+    background-color: #f7b1b1; 
+}
 .monster-name-panel {
     display: flex;
     flex-direction: column;
@@ -156,6 +169,7 @@
 .monster-name-panel input:focus {
     border-color: #206022;
 }
+
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -270,41 +284,41 @@ z-index: 3;
     cursor: pointer;
     transition: 0.2s;
     text-align: center;
-  }
-  
-  .home-card:hover {
+}
+
+.home-card:hover {
     transform: scale(1.05);
-  }
-  
-  .home-card img {
+}
+
+.home-card img {
     width: 150px;
     height: 150px;
     object-fit: cover;
     border-radius: 10px;
-  }
-  
-  .modal {
+}
+
+.modal {
     display: none;
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.6);
     justify-content: center;
     align-items: center;
-  }
-  
-  .modal-content {
+}
+
+.modal-content {
     background: white;
     padding: 20px;
     border-radius: 12px;
     width: 300px;
     text-align: center;
-  }
-  
-  .close {
+}
+
+.close {
     cursor: pointer;
     float: right;
     font-size: 20px;
-  }
+}
 
 
 
@@ -423,13 +437,13 @@ z-index: 3;
 }
 
 .game-home-bg .game-grid {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
     
-        height: 75vh;  /* controls vertical position */
-    }
+    height: 75vh;  /* controls vertical position */
+}
 
 .game-item {
     display: flex;

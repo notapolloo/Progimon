@@ -4,6 +4,7 @@ import PageShell from "../components/PageShell";
 export default function InventoryPage({ navigate }) {
   const [inventory, setInventory] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [me, setMe] = useState(null);
   
   const go = (to) => {
     if (typeof navigate === "function") navigate(to);
@@ -11,14 +12,25 @@ export default function InventoryPage({ navigate }) {
   };
   
   useEffect(() => {
-    fetch("/api/my-inventory")
-    .then((res) => res.json())
-    .then((data) => setInventory(Array.isArray(data) ? data : []))
-    .catch(() => setInventory([]));
+    fetch("/api/my-inventory", { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => setInventory(Array.isArray(data) ? data : []))
+      .catch(() => setInventory([]));
   }, []);
-  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
+  useEffect(() => {
+    fetch("/api/me", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setMe(data && data.loggedIn ? data : null))
+      .catch(() => setMe(null));
+  }, []);
 
+  const isOwner =
+    !!selected &&
+    !!me &&
+    (selected.parentUser === me.username ||
+      selected.parentUser === me.userId ||
+      selected.parentUser === String(me.userId ?? ""));
 
   return (
     <PageShell title="Welcome to the Progi-pad!">
@@ -62,8 +74,7 @@ export default function InventoryPage({ navigate }) {
     <p>Level: {selected?.level}</p>
     <p>Created By: {selected?.parentUser}</p>
 
-
-    {!selected?.bg_url && (
+    {!selected?.bg_url && isOwner && (
       <button
         id="make_room"
         type="button"
@@ -72,12 +83,22 @@ export default function InventoryPage({ navigate }) {
         Make their ProgiPad!
       </button>
     )}
+    {selected?.bg_url && isOwner && (
+      <button
+        id="remake_room"
+        type="button"
+        onClick={() => go(`/drawpad?id=${encodeURIComponent(selected?._id ?? "")}`)}
+      >
+        Remake their ProgiPad!
+      </button>
+    )}
 
     <button id="go_to_room"
+    
     type="button"
     
    
-    onClick={() => go("/progiRoom")}
+    onClick={() => go(`/progiRoom?id=${encodeURIComponent(selected?._id ?? "")}`)}
     >
     Go to their ProgiPad!
     </button>

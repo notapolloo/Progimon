@@ -33,7 +33,7 @@ export default function HomePage({ navigate }) {
 
         if (cancelled) return;
 
-        const randomFive = [...progimonData].sort(() => 0.5 - Math.random()).slice(0, 5);
+        const randomFive = [...progimonData].sort(() => 0.5 - Math.random()).slice(0, 8);
         setProgimon(randomFive);
         if (drawAccessData) setDrawAccess(drawAccessData);
       })
