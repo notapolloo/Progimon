@@ -294,7 +294,7 @@ export default function DrawPage({ navigate }) {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ 
-          bg_url: progi_pad
+        bg_url: progi_pad
         })
       });
 

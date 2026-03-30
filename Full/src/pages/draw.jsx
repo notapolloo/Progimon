@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import PageShell from "../components/PageShell";
-
+import homeless from "../img/homeless.png";
 
 const TOOL_OPTIONS = [
   { id: "brush", label: "Brush" },
@@ -329,7 +329,8 @@ export default function DrawPage({ navigate }) {
       body: JSON.stringify({
         name: name.trim(),
         level: 0,
-        img_url
+        img_url,
+        bg_url: homeless, // Default background for drawn progimon
       })
     });
 

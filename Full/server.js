@@ -179,13 +179,13 @@ async function main() {
    const Progimon = mongoose.model("Progimon", progimonSchema);
    const Accounts = mongoose.model("Accounts", AccountSchema);
    const DRAW_UNLOCK_LEVEL = 5;
-
+   
    async function getDrawAccessForUser(userId) {
       const mine = await Progimon.find({ parentUser: userId })
-         .sort({ _id: 1 })
-         .select("_id name level")
-         .lean();
-
+      .sort({ _id: 1 })
+      .select("_id name level")
+      .lean();
+      
       if (mine.length === 0) {
          return {
             unlocked: true,
@@ -194,10 +194,10 @@ async function main() {
             starter: null
          };
       }
-
+      
       const starter = mine[0];
       const starterLevel = Number(starter?.level) || 0;
-
+      
       return {
          unlocked: starterLevel >= DRAW_UNLOCK_LEVEL,
          unlockLevel: DRAW_UNLOCK_LEVEL,
@@ -275,6 +275,7 @@ async function main() {
          name: req.body.name,
          level: req.body.level,
          img_url: req.body.img_url,
+         bg_url: req.body.bg_url || "",
          parentUser: req.session.userId
       });
       
@@ -363,40 +364,40 @@ async function main() {
          return res.status(500).json({ error: "Reward failed" });
       }
    });
-
+   
    app.post("/api/progifood/feed", requireAuth, async (req, res) => {
       try {
          const progimonId = String(req.body?.progimonId || "");
          if (!mongoose.Types.ObjectId.isValid(progimonId)) {
             return res.status(400).json({ error: "Valid progimonId required" });
          }
-
+         
          const account = await Accounts.findById(req.session.userId).select("progiFood inventory");
          if (!account) {
             return res.status(404).json({ error: "Account not found" });
          }
-
+         
          const ownsProgimon = Array.isArray(account.inventory)
-            && account.inventory.some((id) => String(id) === progimonId);
+         && account.inventory.some((id) => String(id) === progimonId);
          if (!ownsProgimon) {
             return res.status(403).json({ error: "You can only feed claimed Progimon" });
          }
-
+         
          const currentFood = Number(account.progiFood) || 0;
          if (currentFood < 1) {
             return res.status(400).json({ error: "Not enough ProgiFood" });
          }
-
+         
          const progimon = await Progimon.findById(progimonId);
          if (!progimon) {
             return res.status(404).json({ error: "Progimon not found" });
          }
-
+         
          account.progiFood = currentFood - 1;
          progimon.level = (Number(progimon.level) || 0) + 1;
-
+         
          await Promise.all([account.save(), progimon.save()]);
-
+         
          return res.json({
             message: `${progimon.name} leveled up!`,
             progiFood: account.progiFood,
@@ -453,19 +454,19 @@ async function main() {
          const id = req.params.id;
          const bg_url = req.body?.bg_url;
          const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
-
+         
          if (typeof bg_url !== "string" || !bg_url.startsWith("data:image/")) {
             return res.status(400).json({ error: "bg_url (data URL) required" });
          }
-
+         
          const mine = await Progimon.findOne({ _id: id, parentUser: sessionUserId });
          if (!mine) {
             return res.status(404).json({ error: "Progimon not found for this user" });
          }
-
+         
          mine.bg_url = bg_url;
          await mine.save();
-
+         
          return res.json({ success: true, progimon: mine });
       } catch (err) {
          console.error("Failed to update background", err);
@@ -478,233 +479,240 @@ async function main() {
       id = req.params.id;
       try{progimon = await Progimon.findById(id);
          if(progimon){
-            console.log(progimon);
+            
             res.send(progimon);
          }}catch(error){
             console.log(error);
             console.log("lmfao");
             res.status(404).send({"error": 404, "msg":"Dude, I like- called out super loud for this guy and he's not here! Maybe bro doesn't exist!."});      }
          });
-         //--
-         app.get("/api/ACCOUNTSDEV/:id", async function(req, res){
-            id = req.params.id;
-            try{account = await Accounts.findById(id);
-               if(account){
-                  console.log(account);
-                  res.send(account);
-               }}catch(error){
-                  console.log(error);
-                  console.log("lmfao");
-                  res.status(404).send({"error": 404, "msg":"Does bro even exist yet? I don't see them in my omniscient awareness of all users."});      }
-               });
-               //protected map route
-               //might not work
-               app.get("/map", requireAuth, (req, res) => {
-                  res.redirect("/dum");
-               });            
+
+
                
-               //delete
-               app.delete("/api/progimon/:id", async function(req, res){
+               
+               
+               
+               //--
+               app.get("/api/ACCOUNTSDEV/:id", async function(req, res){
                   id = req.params.id;
-                  progimon = await Progimon.findById(id);
-                  if(progimon){
-                     try{
-                        await Progimon.deleteOne({_id: id});
-                        res.send({"message":`Progimon of id=${id} has been deleted. 'G night lil' dude! See ya in cyberspace!`, "response_code":200});
-                     }catch(err){
-                        console.error
-                        res.status(500).send(err); 
-                     }
-                  }else{
-                     res.status(404).send({"error": 404, "msg":"Error! Bro doesn't wanna sleep just yet!"});
-                  }});        
-                  //--
-                  app.delete("/api/ACCOUNTSDEV/:id", async function(req, res){
-                     id = req.params.id;
-                     account = await Accounts.findById(id);
+                  try{account = await Accounts.findById(id);
                      if(account){
-                        try{
-                           await Accounts.deleteOne({_id: id});
-                           res.send({"message":`Account of id=${id} has been deleted. Hope ya had fun!`, "response_code":200});
-                        }catch(err){
-                           console.error
-                           res.status(500).send(err); 
-                        }
-                     }else{
-                        res.status(404).send({"error": 404, "msg":"Error! Brodie doesn't wanna sleep just yet!"});
-                     }});  
+                        console.log(account);
+                        res.send(account);
+                     }}catch(error){
+                        console.log(error);
+                        console.log("lmfao");
+                        res.status(404).send({"error": 404, "msg":"Does bro even exist yet? I don't see them in my omniscient awareness of all users."});      }
+                     });
+                     //protected map route
+                     //might not work
+                     app.get("/map", requireAuth, (req, res) => {
+                        res.redirect("/dum");
+                     });            
                      
-                     //who am I test 
-                     app.get("/api/me", async (req, res) => {
-                        if (!req.session.userId) {
-                           return res.status(401).json({ loggedIn: false, message: "Not logged in req.session.userId is " + req.session.userId });
-                        }
+                     //delete
+                     app.delete("/api/progimon/:id", async function(req, res){
+                        id = req.params.id;
+                        progimon = await Progimon.findById(id);
+                        if(progimon){
+                           try{
+                              await Progimon.deleteOne({_id: id});
+                              res.send({"message":`Progimon of id=${id} has been deleted. 'G night lil' dude! See ya in cyberspace!`, "response_code":200});
+                           }catch(err){
+                              console.error
+                              res.status(500).send(err); 
+                           }
+                        }else{
+                           res.status(404).send({"error": 404, "msg":"Error! Bro doesn't wanna sleep just yet!"});
+                        }});        
+                        //--
+                        app.delete("/api/ACCOUNTSDEV/:id", async function(req, res){
+                           id = req.params.id;
+                           account = await Accounts.findById(id);
+                           if(account){
+                              try{
+                                 await Accounts.deleteOne({_id: id});
+                                 res.send({"message":`Account of id=${id} has been deleted. Hope ya had fun!`, "response_code":200});
+                              }catch(err){
+                                 console.error
+                                 res.status(500).send(err); 
+                              }
+                           }else{
+                              res.status(404).send({"error": 404, "msg":"Error! Brodie doesn't wanna sleep just yet!"});
+                           }});  
+                           
+                           //who am I test 
+                           app.get("/api/me", async (req, res) => {
+                              if (!req.session.userId) {
+                                 return res.status(401).json({ loggedIn: false, message: "Not logged in req.session.userId is " + req.session.userId });
+                              }
+                              
+                              const account = await Accounts.findById(req.session.userId).select("progiFood");
+                              res.json({
+                                 loggedIn: true,
+                                 userId: req.session.userId,
+                                 username: req.session.username,
+                                 progiFood: account?.progiFood ?? 0,
+                                 "message": `Welcome back, ${req.session.username}! Your user ID is ${req.session.userId}.`
+                              });
+                           });
+                           
+                           app.get("/api/draw-access", requireAuth, async (req, res) => {
+                              try {
+                                 const drawAccess = await getDrawAccessForUser(req.session.userId);
+                                 return res.json(drawAccess);
+                              } catch (err) {
+                                 console.error("Failed to get draw access", err);
+                                 return res.status(500).json({ error: "Server error" });
+                              }
+                           });
+                           
+                           app.get("/api/me/resources", requireAuth, async (req, res) => {
+                              try {
+                                 const account = await Accounts.findById(req.session.userId).select("progiFood");
+                                 return res.json({ progiFood: account?.progiFood ?? 0 });
+                              } catch (err) {
+                                 console.error("Failed to fetch resources", err);
+                                 return res.status(500).json({ error: "Server error" });
+                              }
+                           });
+                           
+                           // Check active sessions
+                           app.get("/api/sessions", async (req, res) => {
+                              try {
+                                 const sessions = await mongoose.connection.db.collection('sessions').find({}).toArray();
+                                 const activeSessions = sessions.map(session => {
+                                    const sessionData = JSON.parse(session.session);
+                                    return {
+                                       username: sessionData.username,
+                                       _id: session._id,
+                                       userId: sessionData.userId,
+                                       expires: session.expires
+                                    };
+                                 });
+                                 res.json({
+                                    totalSessions: activeSessions.length,
+                                    sessions: activeSessions
+                                 });
+                              } catch (err) {
+                                 console.error('Failed to get sessions', err);
+                                 res.status(500).json({ error: 'Server error' });
+                              }
+                           });
+                           
+                           // Check sessions for current user
+                           app.get("/api/my-sessions", requireAuth, async (req, res) => {
+                              try {
+                                 const sessions = await mongoose.connection.db.collection('sessions').find({}).toArray();
+                                 const userSessions = sessions.filter(session => {
+                                    const sessionData = JSON.parse(session.session);
+                                    return sessionData.userId === req.session.userId;
+                                 }).map(session => ({
+                                    _id: session._id,
+                                    expires: session.expires
+                                 }));
+                                 res.json({
+                                    userId: req.session.userId,
+                                    sessionUsername: req.session.username || 'No one',
+                                    sessionCount: userSessions.length,
+                                    sessions: userSessions
+                                 });
+                              } catch (err) {
+                                 console.error('Failed to get user sessions', err);
+                                 res.status(500).json({ error: 'Server error' });
+                              }
+                           });
+                           app.get("/api/my-inventory", requireAuth, async (req, res) => {
+                              try {
+                                 const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
+                                 const user = await Accounts.findById(sessionUserId).populate("inventory");
+                                 const inventory = Array.isArray(user?.inventory) ? user.inventory : [];
+                                 
+                                 const possibleIds = [...new Set(
+                                    inventory
+                                    .map((p) => p?.parentUser)
+                                    .filter((val) => typeof val === "string" && mongoose.Types.ObjectId.isValid(val))
+                                 )];
+                                 
+                                 let usernameById = new Map();
+                                 if (possibleIds.length > 0) {
+                                    const creators = await Accounts.find({ _id: { $in: possibleIds } })
+                                    .select("_id User")
+                                    .lean();
+                                    usernameById = new Map(creators.map((acc) => [String(acc._id), acc.User]));
+                                 }
+                                 
+                                 const normalized = inventory.map((p) => {
+                                    const key = typeof p?.parentUser === "string" ? p.parentUser : "";
+                                    const resolvedName = usernameById.get(key);
+                                    if (!resolvedName) return p;
+                                    return { ...p.toObject(), parentUser: resolvedName };
+                                 });
+                                 
+                                 res.json(normalized);
+                              } catch (err) {
+                                 console.error("Failed to get inventory", err);
+                                 res.status(500).json({ error: "Server error" });
+                              }
+                           });
+                           
+                           app.get("/api/my-progimon", requireAuth, async (req, res) => {
+                              try {
+                                 const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
+                                 const mine = await Progimon.find({ parentUser: sessionUserId });
+                                 res.json(mine);
+                              } catch (err) {
+                                 console.error("Failed to get user progimon", err);
+                                 res.status(500).json({ error: "Server error" });
+                              }
+                           });
+                           
+                           app.delete("/api/my-progimon/:id", requireAuth, async (req, res) => {
+                              try {
+                                 const id = req.params.id;
+                                 const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
+                                 const mine = await Progimon.findOne({ _id: id, parentUser: sessionUserId });
+                                 if (!mine) {
+                                    return res.status(404).json({ error: "Progimon not found for this user" });
+                                 }
+                                 
+                                 await Progimon.deleteOne({ _id: id });
+                                 await Accounts.updateMany({}, { $pull: { inventory: id } });
+                                 return res.json({ message: "Progimon deleted" });
+                              } catch (err) {
+                                 console.error("Failed to delete user progimon", err);
+                                 res.status(500).json({ error: "Delete failed" });
+                              }
+                           });
+                           
+                           app.delete("/api/my-progimon", requireAuth, async (req, res) => {
+                              try {
+                                 const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
+                                 const mine = await Progimon.find({ parentUser: sessionUserId }).select("_id");
+                                 const ids = mine.map((p) => p._id);
+                                 if (ids.length === 0) {
+                                    return res.json({ message: "No progimon to delete", deletedCount: 0 });
+                                 }
+                                 
+                                 const deleteResult = await Progimon.deleteMany({ _id: { $in: ids } });
+                                 await Accounts.updateMany({}, { $pull: { inventory: { $in: ids } } });
+                                 return res.json({ message: "All your progimon deleted", deletedCount: deleteResult.deletedCount || 0 });
+                              } catch (err) {
+                                 console.error("Failed to delete all user progimon", err);
+                                 res.status(500).json({ error: "Bulk delete failed" });
+                              }
+                           });
+                           
+                           //middleware
+                           
+                           
+                           
+                           
+                           
+                           app.listen(3000, function(){ 
+                              console.log("its progin' time (port 3000)");
+                           });
+                        }//last line of main
                         
-                        const account = await Accounts.findById(req.session.userId).select("progiFood");
-                        res.json({
-                           loggedIn: true,
-                           userId: req.session.userId,
-                           username: req.session.username,
-                           progiFood: account?.progiFood ?? 0,
-                           "message": `Welcome back, ${req.session.username}! Your user ID is ${req.session.userId}.`
-                        });
-                     });
-
-                     app.get("/api/draw-access", requireAuth, async (req, res) => {
-                        try {
-                           const drawAccess = await getDrawAccessForUser(req.session.userId);
-                           return res.json(drawAccess);
-                        } catch (err) {
-                           console.error("Failed to get draw access", err);
-                           return res.status(500).json({ error: "Server error" });
-                        }
-                     });
-                     
-                     app.get("/api/me/resources", requireAuth, async (req, res) => {
-                        try {
-                           const account = await Accounts.findById(req.session.userId).select("progiFood");
-                           return res.json({ progiFood: account?.progiFood ?? 0 });
-                        } catch (err) {
-                           console.error("Failed to fetch resources", err);
-                           return res.status(500).json({ error: "Server error" });
-                        }
-                     });
-                     
-                     // Check active sessions
-                     app.get("/api/sessions", async (req, res) => {
-                        try {
-                           const sessions = await mongoose.connection.db.collection('sessions').find({}).toArray();
-                           const activeSessions = sessions.map(session => {
-                              const sessionData = JSON.parse(session.session);
-                              return {
-                                 username: sessionData.username,
-                                 _id: session._id,
-                                 userId: sessionData.userId,
-                                 expires: session.expires
-                              };
-                           });
-                           res.json({
-                              totalSessions: activeSessions.length,
-                              sessions: activeSessions
-                           });
-                        } catch (err) {
-                           console.error('Failed to get sessions', err);
-                           res.status(500).json({ error: 'Server error' });
-                        }
-                     });
-                     
-                     // Check sessions for current user
-                     app.get("/api/my-sessions", requireAuth, async (req, res) => {
-                        try {
-                           const sessions = await mongoose.connection.db.collection('sessions').find({}).toArray();
-                           const userSessions = sessions.filter(session => {
-                              const sessionData = JSON.parse(session.session);
-                              return sessionData.userId === req.session.userId;
-                           }).map(session => ({
-                              _id: session._id,
-                              expires: session.expires
-                           }));
-                           res.json({
-                              userId: req.session.userId,
-                              sessionUsername: req.session.username || 'No one',
-                              sessionCount: userSessions.length,
-                              sessions: userSessions
-                           });
-                        } catch (err) {
-                           console.error('Failed to get user sessions', err);
-                           res.status(500).json({ error: 'Server error' });
-                        }
-                     });
-                     app.get("/api/my-inventory", requireAuth, async (req, res) => {
-                        try {
-                           const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
-                           const user = await Accounts.findById(sessionUserId).populate("inventory");
-                           const inventory = Array.isArray(user?.inventory) ? user.inventory : [];
-
-                           const possibleIds = [...new Set(
-                              inventory
-                                 .map((p) => p?.parentUser)
-                                 .filter((val) => typeof val === "string" && mongoose.Types.ObjectId.isValid(val))
-                           )];
-
-                           let usernameById = new Map();
-                           if (possibleIds.length > 0) {
-                              const creators = await Accounts.find({ _id: { $in: possibleIds } })
-                                 .select("_id User")
-                                 .lean();
-                              usernameById = new Map(creators.map((acc) => [String(acc._id), acc.User]));
-                           }
-
-                           const normalized = inventory.map((p) => {
-                              const key = typeof p?.parentUser === "string" ? p.parentUser : "";
-                              const resolvedName = usernameById.get(key);
-                              if (!resolvedName) return p;
-                              return { ...p.toObject(), parentUser: resolvedName };
-                           });
-
-                           res.json(normalized);
-                        } catch (err) {
-                           console.error("Failed to get inventory", err);
-                           res.status(500).json({ error: "Server error" });
-                        }
-                     });
-                     
-                     app.get("/api/my-progimon", requireAuth, async (req, res) => {
-                        try {
-                           const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
-                           const mine = await Progimon.find({ parentUser: sessionUserId });
-                           res.json(mine);
-                        } catch (err) {
-                           console.error("Failed to get user progimon", err);
-                           res.status(500).json({ error: "Server error" });
-                        }
-                     });
-                     
-                     app.delete("/api/my-progimon/:id", requireAuth, async (req, res) => {
-                        try {
-                           const id = req.params.id;
-                           const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
-                           const mine = await Progimon.findOne({ _id: id, parentUser: sessionUserId });
-                           if (!mine) {
-                              return res.status(404).json({ error: "Progimon not found for this user" });
-                           }
-                           
-                           await Progimon.deleteOne({ _id: id });
-                           await Accounts.updateMany({}, { $pull: { inventory: id } });
-                           return res.json({ message: "Progimon deleted" });
-                        } catch (err) {
-                           console.error("Failed to delete user progimon", err);
-                           res.status(500).json({ error: "Delete failed" });
-                        }
-                     });
-                     
-                     app.delete("/api/my-progimon", requireAuth, async (req, res) => {
-                        try {
-                           const sessionUserId = req.session.userId?.toString?.() ?? String(req.session.userId ?? "");
-                           const mine = await Progimon.find({ parentUser: sessionUserId }).select("_id");
-                           const ids = mine.map((p) => p._id);
-                           if (ids.length === 0) {
-                              return res.json({ message: "No progimon to delete", deletedCount: 0 });
-                           }
-                           
-                           const deleteResult = await Progimon.deleteMany({ _id: { $in: ids } });
-                           await Accounts.updateMany({}, { $pull: { inventory: { $in: ids } } });
-                           return res.json({ message: "All your progimon deleted", deletedCount: deleteResult.deletedCount || 0 });
-                        } catch (err) {
-                           console.error("Failed to delete all user progimon", err);
-                           res.status(500).json({ error: "Bulk delete failed" });
-                        }
-                     });
-                     
-                     //middleware
-                     
-                     
-                     
-                     
-                     
-                     app.listen(3000, function(){ 
-                        console.log("its progin' time (port 3000)");
-                     });
-                  }//last line of main
-                  
-                  
+                        
+                        
