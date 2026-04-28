@@ -6,6 +6,7 @@ import meow from "../music/sfx/meow.wav";
 import meowrgh from "../music/sfx/meowrgh.wav";
 import nah from "../music/sfx/nah.wav";
 import oiia from "../music/sfx/oiia.wav";
+import cookie from "../img/COOKIE.png";
 
 
 
@@ -29,7 +30,7 @@ export default function Game1({ navigate }) {
       <div className="spa-game1-wrap">
         <p className="spa-game1-score">Score: {score}</p>
         <button type="button" className="spa-game1-click" onClick={handleClick}>
-          Click me
+          <img src={cookie} alt="Cookie" />
         </button>
         {navigate ? (
           <button type="button" className="spa-top-button" onClick={() => navigate("/gameHome")}>
