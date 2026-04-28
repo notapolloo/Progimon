@@ -50,6 +50,17 @@
     
 }
 
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+#progibounce:hover {
+
+  animation: bounce 0.5s ease infinite;
+
+}
+
 #progiSpace{
     background-color: #8ae482;
     overflow: hidden;
@@ -60,7 +71,10 @@
     background-color: #8ae482;
     border-radius: 20px;
 }
-
+#lookup-container{
+    background-color: #8ae482;
+    border-radius: 20px;
+}
 #musik2 {
     text-align: center;
     
@@ -279,7 +293,7 @@ z-index: 3;
 
 .refresh-button {
     margin-top: 20px;
-    width: 60px;
+    
     height: auto;
     cursor: pointer;
 }
@@ -481,6 +495,11 @@ z-index: 3;
     color: rgb(255, 255, 255);
 }
 
+.cardGameText {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 
 

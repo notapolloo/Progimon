@@ -193,20 +193,24 @@
 .spa-game1-click:hover {
   background: #55b9e3;
 }
-/* 🔥 Game3 container (centers everything) */
+/*  Game3 container */
 .game3-container {
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
-/* 🔥 FORCE grid layout (overrides EVERYTHING) */
+/*  FORCE grid layout (overrides EVERYTHING) */
 .game3-container > .memory-board {
   all: unset;
   display: grid !important;
   grid-template-columns: repeat(4, 150px) !important;
-  gap: 20px !important;
-  margin: 30px auto;
+  gap: 40px !important;
+    margin: 20px auto;
+    background: #85cc6f;
+    border: #388c09 solid 2px;
+    border-radius: 25px;
+    padding: 20px
 }
 
 /* Card styling */
@@ -237,25 +241,18 @@
   justify-content: center;
 }
 
-/* 🔥 FRONT (hidden side) */
+/*  FRONT (hidden side) */
 .memory-card .front {
   background: #206022;
   transform: rotateY(0deg);
 }
 
-/* 🔥 BACK (image side) */
+/*  BACK (image side) */
 .memory-card .back {
   transform: rotateY(180deg);
 }
 
-/* 🔥 CRITICAL FIX — actually flips the sides */
-.memory-card.flip .front {
-  transform: rotateY(180deg);
-}
-
-.memory-card.flip .back {
-  transform: rotateY(360deg);
-}
+/* Flip is handled by rotating the parent `.memory-card` via `.memory-card.flip`. */
 
 /* Images */
 .memory-card .front img,
@@ -266,7 +263,7 @@
   border-radius: 10px;
 }
 
-/* 🏆 Win screen */
+/* Win screen */
 .win-screen {
   text-align: center;
   margin-top: 50px;
@@ -292,7 +289,7 @@
   background: #2e8b57;
 }
 
-/* ✨ Matched cards glow */
+/* Matched cards glow */
 .memory-card.matched {
   transform: rotateY(180deg);
   box-shadow: 0 0 15px 5px gold;
@@ -309,16 +306,16 @@
   overflow: hidden;
 }
 
-/* 🌿 Bush base */
+/* Bush base */
 .bush {
   position: absolute;
   width: 170px;
   height: auto;
-  transform: translate(-50%, -50%); /* ✅ center alignment */
+  transform: translate(-50%, -50%); /*  center alignment */
   z-index: 2;
 }
 
-/* 🌳 Tree */
+/*  Tree */
 .tree {
   position: absolute;
   top: 70%;
@@ -326,7 +323,7 @@
   width: 195px;
   height: auto;
   z-index: 10; /* always in front */
-  transform: translate(-50%, -50%); /* ✅ center alignment */
+  transform: translate(-50%, -50%); /*  center alignment */
 }
 
 /* Back bushes  */
@@ -349,14 +346,14 @@
   z-index: 10; /* covers Steve */
 }
 
-/* 👤 Steve */
+/*  Steve */
 .steve {
   width: 90px;
   height: auto;
   position: absolute;
   cursor: pointer;
   z-index: 5;
-  transform: translate(-50%, -50%); /* ✅ KEY FIX */
+  transform: translate(-50%, -50%); /*  KEY FIX */
   transition: top 1s ease, left 1s ease;
 }
 

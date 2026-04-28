@@ -1,19 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PageShell from "../components/PageShell";
 
-// ✅ IMPORT images
+
 import cardBack from "../img/card.png";
 import fallbackImg from "../img/cat-2.png";
 
 export default function Game3() {
+  const MAX_CARDS = 16; // total cards on the board (8 pairs)
   const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [moves, setMoves] = useState(0);
   const [disabled, setDisabled] = useState(false);
   const [score, setScore] = useState(0);
   const [gameWon, setGameWon] = useState(false);
+  const didInit = useRef(false);
 
   useEffect(() => {
+    // In React 18+ dev StrictMode, effects can run twice on mount.
+    // Guarding prevents the deck from being rebuilt (new uuids) right after the first click,
+    // which can look like cards "flip back" immediately.
+    if (didInit.current) return;
+    didInit.current = true;
+
     fetch("/api/progimon")
       .then(res => res.json())
       .then(data => {
@@ -23,7 +31,13 @@ export default function Game3() {
           imageURL: card.img_url
         }));
 
-        const doubled = [...processed, ...processed]
+        const uniqueCount = Math.max(0, Math.floor(MAX_CARDS / 2));
+        const chosen = processed
+          .slice()
+          .sort(() => Math.random() - 0.5)
+          .slice(0, uniqueCount);
+
+        const doubled = [...chosen, ...chosen]
           .map(card => ({
             ...card,
             uuid: Math.random()
@@ -51,7 +65,7 @@ export default function Game3() {
       const [first, second] = newFlipped;
 
       if (first._id === second._id) {
-        // ✅ MATCH
+        //  MATCH
         setCards(prevCards =>
           prevCards.map(c =>
             c._id === first._id ? { ...c, matched: true } : c
@@ -75,16 +89,16 @@ export default function Game3() {
         }, 1200);
 
       } else {
-        // ❌ NOT MATCH
+        //  NOT MATCH
         setTimeout(() => {
           setFlippedCards([]);
           setDisabled(false);
-        }, 1800);
+        }, 1500);
       }
     }
   };
 
-  // 🏆 WIN SCREEN
+  //  WIN SCREEN
   if (gameWon) {
     return (
       <PageShell>
@@ -103,8 +117,8 @@ export default function Game3() {
 
   return (
     <PageShell>
-      <h2>Moves: {moves}</h2>
-      <h3>Score: {score}</h3>
+      <h1 className = "cardGameText">Moves: {moves}</h1>
+      <h2 className = "cardGameText">Score: {score}</h2>
 
       <div className="game3-container">
         <div className="memory-board">

@@ -108,7 +108,7 @@ export default function HomePage({ navigate }) {
       <audio ref={audioRef} loop src={cleverBoyLoop} />
 
       <div className="refresh-container">
-        <img src={refreshIcon} className="refresh-button" onClick={() => window.location.reload()} />
+        <img title = "Wassup vro. Click me to refresh the page!" src={refreshIcon} className="refresh-button" onClick={() => window.location.reload()} />
       </div>
 
       <div id="progiSpace">
@@ -120,7 +120,7 @@ export default function HomePage({ navigate }) {
 
         <ul style={{ listStyle: "none", display: "flex", flexWrap: "wrap", gap: "10rem", justifyContent: "center", padding: 0 }}>
           {progimon.map((m) => (
-            <li key={m._id} style={{ width: 200, textAlign: "center", color: "white", cursor: "pointer" }} onClick={() => setSelected(m)}>
+            <li id="progibounce" key={m._id} style={{ width: 200, textAlign: "center", color: "white", cursor: "pointer" }} onClick={() => setSelected(m)}>
               <img src={m.img_url} alt={m.name || "monster"} style={{ width: "auto", height: 200 }} onError={(e) => (e.currentTarget.src = catFallback)} />
               <div><strong>{m.name || "Unnamed"}</strong></div>
               <div>Level {m.level}</div>
